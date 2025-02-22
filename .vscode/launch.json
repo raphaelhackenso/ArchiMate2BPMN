@@ -1,0 +1,28 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "at.campus02.Main",
+            "projectName": "archimate2bpmn"
+        },
+        {
+            "type": "java",
+            "name": "Launch JAR with Input",
+            "request": "launch",
+            "mainClass": "",
+            "vmArgs": "",
+            "args": [
+                "StartEvent.xml"
+            ],
+            "cwd": "${workspaceFolder}",
+            "runtimeArgs": [
+                "-jar",
+                "programm-with-all-dependencies.jar"
+            ]
+        }
+    ]
+  }
+  
