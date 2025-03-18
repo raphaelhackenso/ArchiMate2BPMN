@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_9e1352" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="WP1" isExecutable="true">
+    <startEvent id="StartEvent_117b52" name="Start">
+      <extensionElements/>
+      <outgoing>Flow_44038c</outgoing>
+    </startEvent>
+    <endEvent id="EndEvent_ea494d" name="End">
+      <extensionElements/>
+      <incoming>Flow_6fff66</incoming>
+    </endEvent>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_a197a4" name="A">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_44038c</incoming>
+      <outgoing>Flow_a04231</outgoing>
+      <ioSpecification id="IoSpecification_a197a4">
+        <inputSet id="InputSet_a197a4"/>
+        <outputSet id="OutputSet_a197a4"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_5de87b" name="B">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_a04231</incoming>
+      <outgoing>Flow_6fff66</outgoing>
+      <ioSpecification id="IoSpecification_5de87b">
+        <inputSet id="InputSet_5de87b"/>
+        <outputSet id="OutputSet_5de87b"/>
+      </ioSpecification>
+    </userTask>
+    <sequenceFlow id="Flow_44038c" sourceRef="StartEvent_117b52" targetRef="UserTask_a197a4"/>
+    <sequenceFlow id="Flow_a04231" sourceRef="UserTask_a197a4" targetRef="UserTask_5de87b"/>
+    <sequenceFlow id="Flow_6fff66" sourceRef="UserTask_5de87b" targetRef="EndEvent_ea494d"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_9e1352">
+    <bpmndi:BPMNPlane id="Plane_9e1352">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_117b52" id="StartEvent_117b52_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="120.0" y="182.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_ea494d" id="EndEvent_ea494d_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="576.0" y="182.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_a197a4" id="UserTask_a197a4_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="276.0" y="182.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_5de87b" id="UserTask_5de87b_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="420.0" y="182.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_44038c" id="Flow_44038c_di" sourceElement="StartEvent_117b52_di" targetElement="UserTask_a197a4_di">
+        <di:waypoint x="156.0" y="200.0"/>
+        <di:waypoint x="276.0" y="209.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_a04231" id="Flow_a04231_di" sourceElement="UserTask_a197a4_di" targetElement="UserTask_5de87b_di">
+        <di:waypoint x="396.0" y="209.5"/>
+        <di:waypoint x="420.0" y="209.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_6fff66" id="Flow_6fff66_di" sourceElement="UserTask_5de87b_di" targetElement="EndEvent_ea494d_di">
+        <di:waypoint x="540.0" y="209.5"/>
+        <di:waypoint x="576.0" y="200.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

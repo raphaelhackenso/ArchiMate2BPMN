@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_2cb3a9dd644b4c209edc4ec6fb893597" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <collaboration id="Collaboration_2cb3a9dd644b4c209edc4ec6fb893597">
+    <participant id="Participant_715e1bfa1e6045769d17d950eeda4330" name="Standort" processRef="PROCESS_715E1BFA1E6045769D17D950EEDA4330"/>
+    <participant id="Participant_7163e32d4eca47c188869ad434e33a44" name="Standort" processRef="PROCESS_7163E32D4ECA47C188869AD434E33A44"/>
+  </collaboration>
+  <process id="PROCESS_715E1BFA1E6045769D17D950EEDA4330" isExecutable="true" name="Standort">
+    <laneSet id="LaneSet_715e1bfa1e6045769d17d950eeda4330">
+      <lane id="Lane_267df4ae549942b689ac2c6952bb2352" name="Geschäftsrolle"/>
+    </laneSet>
+  </process>
+  <process id="PROCESS_7163E32D4ECA47C188869AD434E33A44" isExecutable="true" name="Standort">
+    <laneSet id="LaneSet_7163e32d4eca47c188869ad434e33a44">
+      <lane id="Lane_71a3a94daf014edca816b783400d5525" name="Geschäftsrolle"/>
+    </laneSet>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_2cb3a9dd644b4c209edc4ec6fb893597">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_2cb3a9dd644b4c209edc4ec6fb893597" id="Plane_2cb3a9dd644b4c209edc4ec6fb893597">
+      <bpmndi:BPMNShape bpmnElement="Participant_715e1bfa1e6045769d17d950eeda4330" id="BPMNShape_f94f6e1c-c74a-48f2-8c7a-cc33a4126130" isHorizontal="true">
+        <dc:Bounds height="121.0" width="181.0" x="264.0" y="96.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Participant_7163e32d4eca47c188869ad434e33a44" id="BPMNShape_9d71b995-7067-41b8-8acc-5e13249a529a" isHorizontal="true">
+        <dc:Bounds height="211.0" width="217.0" x="504.0" y="96.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Lane_267df4ae549942b689ac2c6952bb2352" id="BPMNShape_6da4640f-c719-40bc-bab8-09b27d3ddc47" isHorizontal="true">
+        <dc:Bounds height="55.0" width="151.0" x="294.0" y="252.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Lane_71a3a94daf014edca816b783400d5525" id="BPMNShape_82354639-0863-4761-bc90-417f02d3b53c" isHorizontal="true">
+        <dc:Bounds height="145.0" width="187.0" x="534.0" y="144.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
