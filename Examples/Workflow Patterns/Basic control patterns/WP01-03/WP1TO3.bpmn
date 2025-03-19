@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_9e1352" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="WP1TO3" isExecutable="true">
+    <startEvent id="StartEvent_117b52" name="Start">
+      <extensionElements/>
+      <outgoing>Flow_44038c</outgoing>
+    </startEvent>
+    <endEvent id="EndEvent_ea494d" name="End">
+      <extensionElements/>
+      <incoming>Flow_209251</incoming>
+    </endEvent>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_a197a4" name="A">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_44038c</incoming>
+      <outgoing>Flow_087d86</outgoing>
+      <ioSpecification id="IoSpecification_a197a4">
+        <inputSet id="InputSet_a197a4"/>
+        <outputSet id="OutputSet_a197a4"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_5de87b" name="B">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_718e6f</incoming>
+      <outgoing>Flow_193e9a</outgoing>
+      <ioSpecification id="IoSpecification_5de87b">
+        <inputSet id="InputSet_5de87b"/>
+        <outputSet id="OutputSet_5de87b"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_432da3" name="C">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_a6db9b</incoming>
+      <outgoing>Flow_e073a2</outgoing>
+      <ioSpecification id="IoSpecification_432da3">
+        <inputSet id="InputSet_432da3"/>
+        <outputSet id="OutputSet_432da3"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_590e91" name="D">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_d6a04b</incoming>
+      <outgoing>Flow_209251</outgoing>
+      <ioSpecification id="IoSpecification_590e91">
+        <inputSet id="InputSet_590e91"/>
+        <outputSet id="OutputSet_590e91"/>
+      </ioSpecification>
+    </userTask>
+    <parallelGateway id="Gateway_138846" name="Junction">
+      <extensionElements/>
+      <incoming>Flow_087d86</incoming>
+      <outgoing>Flow_718e6f</outgoing>
+      <outgoing>Flow_a6db9b</outgoing>
+    </parallelGateway>
+    <parallelGateway id="Gateway_1669d6" name="Junction">
+      <extensionElements/>
+      <incoming>Flow_193e9a</incoming>
+      <incoming>Flow_e073a2</incoming>
+      <outgoing>Flow_d6a04b</outgoing>
+    </parallelGateway>
+    <sequenceFlow id="Flow_44038c" sourceRef="StartEvent_117b52" targetRef="UserTask_a197a4"/>
+    <sequenceFlow id="Flow_209251" sourceRef="UserTask_590e91" targetRef="EndEvent_ea494d"/>
+    <sequenceFlow id="Flow_087d86" sourceRef="UserTask_a197a4" targetRef="Gateway_138846"/>
+    <sequenceFlow id="Flow_718e6f" sourceRef="Gateway_138846" targetRef="UserTask_5de87b"/>
+    <sequenceFlow id="Flow_a6db9b" sourceRef="Gateway_138846" targetRef="UserTask_432da3"/>
+    <sequenceFlow id="Flow_193e9a" sourceRef="UserTask_5de87b" targetRef="Gateway_1669d6"/>
+    <sequenceFlow id="Flow_e073a2" sourceRef="UserTask_432da3" targetRef="Gateway_1669d6"/>
+    <sequenceFlow id="Flow_d6a04b" sourceRef="Gateway_1669d6" targetRef="UserTask_590e91"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_9e1352">
+    <bpmndi:BPMNPlane id="Plane_9e1352">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_117b52" id="StartEvent_117b52_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="132.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_ea494d" id="EndEvent_ea494d_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="840.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_a197a4" id="UserTask_a197a4_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="276.0" y="182.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_5de87b" id="UserTask_5de87b_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="492.0" y="126.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_432da3" id="UserTask_432da3_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="492.0" y="234.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_590e91" id="UserTask_590e91_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="696.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Gateway_138846" id="Gateway_138846_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="432.0" y="202.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Gateway_1669d6" id="Gateway_1669d6_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="636.0" y="202.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_44038c" id="Flow_44038c_di" sourceElement="StartEvent_117b52_di" targetElement="UserTask_a197a4_di">
+        <di:waypoint x="168.0" y="198.0"/>
+        <di:waypoint x="276.0" y="209.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_209251" id="Flow_209251_di" sourceElement="UserTask_590e91_di" targetElement="EndEvent_ea494d_di">
+        <di:waypoint x="816.0" y="207.5"/>
+        <di:waypoint x="840.0" y="198.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_087d86" id="Flow_087d86_di" sourceElement="UserTask_a197a4_di" targetElement="Gateway_138846_di">
+        <di:waypoint x="396.0" y="209.5"/>
+        <di:waypoint x="432.0" y="227.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_718e6f" id="Flow_718e6f_di" sourceElement="Gateway_138846_di" targetElement="UserTask_5de87b_di">
+        <di:waypoint x="482.0" y="227.0"/>
+        <di:waypoint x="492.0" y="153.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_a6db9b" id="Flow_a6db9b_di" sourceElement="Gateway_138846_di" targetElement="UserTask_432da3_di">
+        <di:waypoint x="482.0" y="227.0"/>
+        <di:waypoint x="492.0" y="261.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_193e9a" id="Flow_193e9a_di" sourceElement="UserTask_5de87b_di" targetElement="Gateway_1669d6_di">
+        <di:waypoint x="612.0" y="153.5"/>
+        <di:waypoint x="636.0" y="227.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_e073a2" id="Flow_e073a2_di" sourceElement="UserTask_432da3_di" targetElement="Gateway_1669d6_di">
+        <di:waypoint x="612.0" y="261.5"/>
+        <di:waypoint x="636.0" y="227.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_d6a04b" id="Flow_d6a04b_di" sourceElement="Gateway_1669d6_di" targetElement="UserTask_590e91_di">
+        <di:waypoint x="686.0" y="227.0"/>
+        <di:waypoint x="696.0" y="207.5"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

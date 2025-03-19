@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.1/archimate3_Diagram.xsd" identifier="id-9e1352">
+  <name xml:lang="de">WP7</name>
+  <elements>
+    <element identifier="id-117b52" xsi:type="BusinessEvent">
+      <name xml:lang="de">Start</name>
+      <properties>
+        <property propertyDefinitionRef="propid-1">
+          <value xml:lang="de">StartEvent</value>
+        </property>
+      </properties>
+    </element>
+    <element identifier="id-ea494d" xsi:type="BusinessEvent">
+      <name xml:lang="de">End</name>
+      <properties>
+        <property propertyDefinitionRef="propid-1">
+          <value xml:lang="de">EndEvent</value>
+        </property>
+      </properties>
+    </element>
+    <element identifier="id-a197a4" xsi:type="BusinessProcess">
+      <name xml:lang="de">A</name>
+      <properties>
+        <property propertyDefinitionRef="propid-2">
+          <value xml:lang="de">UserTask</value>
+        </property>
+      </properties>
+    </element>
+    <element identifier="id-5de87b" xsi:type="BusinessProcess">
+      <name xml:lang="de">B</name>
+      <properties>
+        <property propertyDefinitionRef="propid-2">
+          <value xml:lang="de">UserTask</value>
+        </property>
+      </properties>
+    </element>
+    <element identifier="id-432da3" xsi:type="BusinessProcess">
+      <name xml:lang="de">C</name>
+      <properties>
+        <property propertyDefinitionRef="propid-2">
+          <value xml:lang="de">UserTask</value>
+        </property>
+      </properties>
+    </element>
+    <element identifier="id-590e91" xsi:type="BusinessProcess">
+      <name xml:lang="de">D</name>
+      <properties>
+        <property propertyDefinitionRef="propid-2">
+          <value xml:lang="de">UserTask</value>
+        </property>
+      </properties>
+    </element>
+  </elements>
+  <relationships>
+    <relationship identifier="id-44038c" source="id-117b52" target="id-a197a4" xsi:type="Triggering" />
+    <relationship identifier="id-209251" source="id-590e91" target="id-ea494d" xsi:type="Triggering" />
+    <relationship identifier="id-1f2e00" source="id-a197a4" target="id-5de87b" xsi:type="Triggering" />
+    <relationship identifier="id-7b97e7" source="id-a197a4" target="id-432da3" xsi:type="Triggering" />
+    <relationship identifier="id-9aa73f" source="id-5de87b" target="id-590e91" xsi:type="Triggering" />
+    <relationship identifier="id-18e983" source="id-432da3" target="id-590e91" xsi:type="Triggering" />
+  </relationships>
+  <organizations>
+    <item>
+      <label xml:lang="de">Business</label>
+      <item identifierRef="id-117b52" />
+      <item identifierRef="id-ea494d" />
+      <item identifierRef="id-a197a4" />
+      <item identifierRef="id-5de87b" />
+      <item identifierRef="id-432da3" />
+      <item identifierRef="id-590e91" />
+    </item>
+    <item>
+      <label xml:lang="de">Relations</label>
+      <item identifierRef="id-44038c" />
+      <item identifierRef="id-209251" />
+      <item identifierRef="id-1f2e00" />
+      <item identifierRef="id-7b97e7" />
+      <item identifierRef="id-9aa73f" />
+      <item identifierRef="id-18e983" />
+    </item>
+    <item>
+      <label xml:lang="de">Views</label>
+      <item identifierRef="id-727cc4" />
+    </item>
+  </organizations>
+  <propertyDefinitions>
+    <propertyDefinition identifier="propid-1" type="string">
+      <name>subClass</name>
+    </propertyDefinition>
+    <propertyDefinition identifier="propid-2" type="string">
+      <name>subclass</name>
+    </propertyDefinition>
+  </propertyDefinitions>
+  <views>
+    <diagrams>
+      <view identifier="id-727cc4" xsi:type="Diagram">
+        <name xml:lang="de">Default View</name>
+        <node identifier="id-e16e62" elementRef="id-117b52" xsi:type="Element" x="132" y="180" w="120" h="55">
+          <style>
+            <fillColor r="255" g="255" b="181" a="100" />
+            <lineColor r="92" g="92" b="92" a="100" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </node>
+        <node identifier="id-451009" elementRef="id-ea494d" xsi:type="Element" x="720" y="180" w="120" h="55">
+          <style>
+            <fillColor r="255" g="255" b="181" a="100" />
+            <lineColor r="92" g="92" b="92" a="100" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </node>
+        <node identifier="id-651870" elementRef="id-a197a4" xsi:type="Element" x="276" y="182" w="120" h="55">
+          <style>
+            <fillColor r="255" g="255" b="181" a="100" />
+            <lineColor r="92" g="92" b="92" a="100" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </node>
+        <node identifier="id-fae8f3" elementRef="id-5de87b" xsi:type="Element" x="420" y="126" w="120" h="55">
+          <style>
+            <fillColor r="255" g="255" b="181" a="100" />
+            <lineColor r="92" g="92" b="92" a="100" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </node>
+        <node identifier="id-ed3a40" elementRef="id-432da3" xsi:type="Element" x="420" y="234" w="120" h="55">
+          <style>
+            <fillColor r="255" g="255" b="181" a="100" />
+            <lineColor r="92" g="92" b="92" a="100" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </node>
+        <node identifier="id-aa03af" elementRef="id-590e91" xsi:type="Element" x="576" y="180" w="120" h="55">
+          <style>
+            <fillColor r="255" g="255" b="181" a="100" />
+            <lineColor r="92" g="92" b="92" a="100" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </node>
+        <connection identifier="id-d94d1f" relationshipRef="id-44038c" xsi:type="Relationship" source="id-e16e62" target="id-651870">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+        <connection identifier="id-1b91f8" relationshipRef="id-1f2e00" xsi:type="Relationship" source="id-651870" target="id-fae8f3">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+        <connection identifier="id-6ef4d6" relationshipRef="id-7b97e7" xsi:type="Relationship" source="id-651870" target="id-ed3a40">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+        <connection identifier="id-52533d" relationshipRef="id-9aa73f" xsi:type="Relationship" source="id-fae8f3" target="id-aa03af">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+        <connection identifier="id-50106e" relationshipRef="id-18e983" xsi:type="Relationship" source="id-ed3a40" target="id-aa03af">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+        <connection identifier="id-5ce5f6" relationshipRef="id-209251" xsi:type="Relationship" source="id-aa03af" target="id-451009">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+      </view>
+    </diagrams>
+  </views>
+</model>
