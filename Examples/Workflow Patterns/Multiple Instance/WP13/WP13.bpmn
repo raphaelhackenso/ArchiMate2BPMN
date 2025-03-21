@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_9e1352" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="WP13" isExecutable="true">
+    <startEvent id="StartEvent_117b52" name="Start">
+      <extensionElements/>
+      <outgoing>Flow_236815</outgoing>
+    </startEvent>
+    <endEvent id="EndEvent_ea494d" name="End">
+      <extensionElements/>
+      <incoming>Flow_18361e</incoming>
+    </endEvent>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_5ac391" name="A (2x)">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_236815</incoming>
+      <outgoing>Flow_18361e</outgoing>
+      <ioSpecification id="IoSpecification_5ac391">
+        <inputSet id="InputSet_5ac391"/>
+        <outputSet id="OutputSet_5ac391"/>
+      </ioSpecification>
+      <multiInstanceLoopCharacteristics id="multiInstanceLoopCharacteristics_5ac391" isSequential="true">
+        <loopCardinality>2</loopCardinality>
+      </multiInstanceLoopCharacteristics>
+    </userTask>
+    <sequenceFlow id="Flow_236815" sourceRef="StartEvent_117b52" targetRef="UserTask_5ac391"/>
+    <sequenceFlow id="Flow_18361e" sourceRef="UserTask_5ac391" targetRef="EndEvent_ea494d"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_9e1352">
+    <bpmndi:BPMNPlane id="Plane_9e1352">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_117b52" id="StartEvent_117b52_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="72.0" y="176.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_ea494d" id="EndEvent_ea494d_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="396.0" y="176.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_5ac391" id="UserTask_5ac391_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="228.0" y="176.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_236815" id="Flow_236815_di" sourceElement="StartEvent_117b52_di" targetElement="UserTask_5ac391_di">
+        <di:waypoint x="108.0" y="194.0"/>
+        <di:waypoint x="228.0" y="203.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_18361e" id="Flow_18361e_di" sourceElement="UserTask_5ac391_di" targetElement="EndEvent_ea494d_di">
+        <di:waypoint x="348.0" y="203.5"/>
+        <di:waypoint x="396.0" y="194.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

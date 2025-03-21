@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_9e1352" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="WP11" isExecutable="true">
+    <startEvent id="StartEvent_117b52" name="Start">
+      <extensionElements/>
+      <outgoing>Flow_236815</outgoing>
+    </startEvent>
+    <endEvent id="EndEvent_ea494d" name="End">
+      <extensionElements/>
+      <incoming>Flow_429a54</incoming>
+    </endEvent>
+    <endEvent id="EndEvent_89d14a" name="End2">
+      <extensionElements/>
+      <incoming>Flow_459854</incoming>
+    </endEvent>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_432da3" name="B">
+      <extensionElements>
+        <camunda:properties/>
+        <camunda:formData>
+          <camunda:formField defaultValue="" id="check2" label="check2" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <incoming>Flow_832a00</incoming>
+      <outgoing>Flow_84aa65</outgoing>
+      <ioSpecification id="IoSpecification_432da3">
+        <inputSet id="InputSet_432da3"/>
+        <outputSet id="OutputSet_432da3"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_5ac391" name="A">
+      <extensionElements>
+        <camunda:properties/>
+        <camunda:formData>
+          <camunda:formField defaultValue="" id="check" label="check" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <incoming>Flow_236815</incoming>
+      <incoming>Flow_3e702e</incoming>
+      <outgoing>Flow_82166f</outgoing>
+      <ioSpecification id="IoSpecification_5ac391">
+        <inputSet id="InputSet_5ac391"/>
+        <outputSet id="OutputSet_5ac391"/>
+      </ioSpecification>
+    </userTask>
+    <exclusiveGateway default="Flow_832a00" id="ExclusiveGateway_667fc2" name="Junction">
+      <extensionElements/>
+      <incoming>Flow_82166f</incoming>
+      <outgoing>Flow_832a00</outgoing>
+      <outgoing>Flow_429a54</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway default="Flow_3e702e" id="ExclusiveGateway_62a104" name="Junction">
+      <extensionElements/>
+      <incoming>Flow_84aa65</incoming>
+      <outgoing>Flow_459854</outgoing>
+      <outgoing>Flow_3e702e</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="Flow_832a00" sourceRef="ExclusiveGateway_667fc2" targetRef="UserTask_432da3"/>
+    <sequenceFlow id="Flow_429a54" sourceRef="ExclusiveGateway_667fc2" targetRef="EndEvent_ea494d">
+      <conditionExpression id="conditionExpression_aef83e9d-4133-4262-8027-d6a451a469f0">${check.equals('End')}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_84aa65" sourceRef="UserTask_432da3" targetRef="ExclusiveGateway_62a104"/>
+    <sequenceFlow id="Flow_236815" sourceRef="StartEvent_117b52" targetRef="UserTask_5ac391"/>
+    <sequenceFlow id="Flow_82166f" sourceRef="UserTask_5ac391" targetRef="ExclusiveGateway_667fc2"/>
+    <sequenceFlow id="Flow_459854" sourceRef="ExclusiveGateway_62a104" targetRef="EndEvent_89d14a">
+      <conditionExpression id="conditionExpression_91d051b0-9816-4b76-a126-8883b7ab7a87">${check2.equals('End2')}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_3e702e" sourceRef="ExclusiveGateway_62a104" targetRef="UserTask_5ac391"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_9e1352">
+    <bpmndi:BPMNPlane id="Plane_9e1352">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_117b52" id="StartEvent_117b52_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="60.0" y="176.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_ea494d" id="EndEvent_ea494d_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="444.0" y="122.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_89d14a" id="EndEvent_89d14a_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="672.0" y="228.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_432da3" id="UserTask_432da3_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="432.0" y="228.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_5ac391" id="UserTask_5ac391_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="228.0" y="176.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_667fc2" id="ExclusiveGateway_667fc2_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="372.0" y="196.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_62a104" id="ExclusiveGateway_62a104_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="600.0" y="248.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_832a00" id="Flow_832a00_di" sourceElement="ExclusiveGateway_667fc2_di" targetElement="UserTask_432da3_di">
+        <di:waypoint x="422.0" y="221.0"/>
+        <di:waypoint x="432.0" y="255.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_429a54" id="Flow_429a54_di" sourceElement="ExclusiveGateway_667fc2_di" targetElement="EndEvent_ea494d_di">
+        <di:waypoint x="422.0" y="221.0"/>
+        <di:waypoint x="444.0" y="140.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_84aa65" id="Flow_84aa65_di" sourceElement="UserTask_432da3_di" targetElement="ExclusiveGateway_62a104_di">
+        <di:waypoint x="552.0" y="255.5"/>
+        <di:waypoint x="600.0" y="273.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_236815" id="Flow_236815_di" sourceElement="StartEvent_117b52_di" targetElement="UserTask_5ac391_di">
+        <di:waypoint x="96.0" y="194.0"/>
+        <di:waypoint x="228.0" y="203.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_82166f" id="Flow_82166f_di" sourceElement="UserTask_5ac391_di" targetElement="ExclusiveGateway_667fc2_di">
+        <di:waypoint x="348.0" y="203.5"/>
+        <di:waypoint x="372.0" y="221.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_459854" id="Flow_459854_di" sourceElement="ExclusiveGateway_62a104_di" targetElement="EndEvent_89d14a_di">
+        <di:waypoint x="650.0" y="273.0"/>
+        <di:waypoint x="672.0" y="246.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_3e702e" id="Flow_3e702e_di" sourceElement="ExclusiveGateway_62a104_di" targetElement="UserTask_5ac391_di">
+        <di:waypoint x="650.0" y="273.0"/>
+        <di:waypoint x="228.0" y="203.5"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
