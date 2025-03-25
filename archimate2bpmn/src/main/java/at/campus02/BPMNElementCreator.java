@@ -477,7 +477,17 @@ public class BPMNElementCreator {
                         multiple.setCamundaValue("true");
                         tmpCamundaProperties.getCamundaProperties().add(multiple);
                     break;
-                case "richtext":
+                case "files":
+                        tmpCamundaFormField.setCamundaId(nameOnly);
+                    tmpCamundaFormField.setCamundaLabel(nameOnly);
+                    tmpCamundaFormField.setCamundaType(typeOnly);
+                    tmpCamundaFormField.setCamundaDefaultValue(defaultValueOrContent);
+                    CamundaProperty multipleFiles = bpmnmodel.newInstance(CamundaProperty.class);
+                        multipleFiles.setCamundaId("multiple");
+                        multipleFiles.setCamundaValue("true");
+                        tmpCamundaProperties.getCamundaProperties().add(multipleFiles);
+                    break;
+                    case "richtext":
                     tmpCamundaFormField.setCamundaId(nameOnly);
                     tmpCamundaFormField.setCamundaLabel(nameOnly);
                     tmpCamundaFormField.setCamundaType("string");
@@ -525,7 +535,7 @@ public class BPMNElementCreator {
 
 
     public static List<Pair<String, String>> findFormFields(List<Pair<String, String>> pairs) {
-        String[] possibleTypes = {"staticcontent", "string", "subform", "boolean", "expression", "date", "enum", "object", "file", "richtext", "orgchart" ,"booleanswitch"};
+        String[] possibleTypes = {"staticcontent", "string", "subform", "boolean", "expression", "date", "enum", "object", "file", "files", "richtext", "orgchart" ,"booleanswitch"};
         List<Pair<String, String>> returnList = new ArrayList<>();
 
         for (Pair<String, String> pair : pairs) {

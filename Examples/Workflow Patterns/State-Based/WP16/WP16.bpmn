@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_9e1352" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="WP16" isExecutable="true">
+    <startEvent id="StartEvent_117b52" name="Start">
+      <extensionElements/>
+      <outgoing>Flow_44038c</outgoing>
+    </startEvent>
+    <endEvent id="EndEvent_ea494d" name="End1">
+      <extensionElements/>
+      <incoming>Flow_66d33a</incoming>
+    </endEvent>
+    <endEvent id="EndEvent_54a1a2" name="End2">
+      <extensionElements/>
+      <incoming>Flow_716c51</incoming>
+    </endEvent>
+    <intermediateCatchEvent id="MessageIntermediateEvent_9b68b1" name="B (Message)">
+      <extensionElements/>
+      <incoming>Flow_9707a9</incoming>
+      <outgoing>Flow_66d33a</outgoing>
+      <messageEventDefinition id="MessageEventDefinition_9b68b1" messageRef="Message_9b68b1"/>
+    </intermediateCatchEvent>
+    <intermediateCatchEvent id="TimerEvent_a1ab7a" name="C (Timer)">
+      <extensionElements/>
+      <incoming>Flow_4c0ad3</incoming>
+      <outgoing>Flow_716c51</outgoing>
+      <timerEventDefinition id="TimerEventDefinition_a1ab7a">
+        <timeDuration id="timeDuration_fbe6de14-ff27-4d86-bcf2-c9343a57e10b">PT5M</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_a197a4" name="A">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_44038c</incoming>
+      <outgoing>Flow_380b78</outgoing>
+      <ioSpecification id="IoSpecification_a197a4">
+        <inputSet id="InputSet_a197a4"/>
+        <outputSet id="OutputSet_a197a4"/>
+      </ioSpecification>
+    </userTask>
+    <eventBasedGateway id="EventbasedGateway_667fc2" name="Junction">
+      <extensionElements/>
+      <incoming>Flow_380b78</incoming>
+      <outgoing>Flow_9707a9</outgoing>
+      <outgoing>Flow_4c0ad3</outgoing>
+    </eventBasedGateway>
+    <sequenceFlow id="Flow_44038c" sourceRef="StartEvent_117b52" targetRef="UserTask_a197a4"/>
+    <sequenceFlow id="Flow_380b78" sourceRef="UserTask_a197a4" targetRef="EventbasedGateway_667fc2"/>
+    <sequenceFlow id="Flow_9707a9" sourceRef="EventbasedGateway_667fc2" targetRef="MessageIntermediateEvent_9b68b1"/>
+    <sequenceFlow id="Flow_4c0ad3" sourceRef="EventbasedGateway_667fc2" targetRef="TimerEvent_a1ab7a"/>
+    <sequenceFlow id="Flow_716c51" sourceRef="TimerEvent_a1ab7a" targetRef="EndEvent_54a1a2"/>
+    <sequenceFlow id="Flow_66d33a" sourceRef="MessageIntermediateEvent_9b68b1" targetRef="EndEvent_ea494d"/>
+  </process>
+  <message id="Message_9b68b1" name="Message_9b68b1"/>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_9e1352">
+    <bpmndi:BPMNPlane id="Plane_9e1352">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_117b52" id="StartEvent_117b52_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="132.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_ea494d" id="EndEvent_ea494d_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="684.0" y="120.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_54a1a2" id="EndEvent_54a1a2_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="684.0" y="234.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="MessageIntermediateEvent_9b68b1" id="MessageIntermediateEvent_9b68b1_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="504.0" y="120.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TimerEvent_a1ab7a" id="TimerEvent_a1ab7a_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="504.0" y="234.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_a197a4" id="UserTask_a197a4_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="276.0" y="182.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EventbasedGateway_667fc2" id="EventbasedGateway_667fc2_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="432.0" y="202.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_44038c" id="Flow_44038c_di" sourceElement="StartEvent_117b52_di" targetElement="UserTask_a197a4_di">
+        <di:waypoint x="168.0" y="198.0"/>
+        <di:waypoint x="276.0" y="209.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_380b78" id="Flow_380b78_di" sourceElement="UserTask_a197a4_di" targetElement="EventbasedGateway_667fc2_di">
+        <di:waypoint x="396.0" y="209.5"/>
+        <di:waypoint x="432.0" y="227.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_9707a9" id="Flow_9707a9_di" sourceElement="EventbasedGateway_667fc2_di" targetElement="MessageIntermediateEvent_9b68b1_di">
+        <di:waypoint x="482.0" y="227.0"/>
+        <di:waypoint x="504.0" y="138.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_4c0ad3" id="Flow_4c0ad3_di" sourceElement="EventbasedGateway_667fc2_di" targetElement="TimerEvent_a1ab7a_di">
+        <di:waypoint x="482.0" y="227.0"/>
+        <di:waypoint x="504.0" y="252.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_716c51" id="Flow_716c51_di" sourceElement="TimerEvent_a1ab7a_di" targetElement="EndEvent_54a1a2_di">
+        <di:waypoint x="540.0" y="252.0"/>
+        <di:waypoint x="684.0" y="252.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_66d33a" id="Flow_66d33a_di" sourceElement="MessageIntermediateEvent_9b68b1_di" targetElement="EndEvent_ea494d_di">
+        <di:waypoint x="540.0" y="138.0"/>
+        <di:waypoint x="684.0" y="138.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
