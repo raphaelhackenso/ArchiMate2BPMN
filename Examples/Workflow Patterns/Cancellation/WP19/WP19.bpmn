@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_9e1352" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <process id="WP19" isExecutable="true">
+    <startEvent id="StartEvent_117b52" name="Start">
+      <extensionElements/>
+      <outgoing>Flow_44038c</outgoing>
+    </startEvent>
+    <endEvent id="EndEvent_ea494d" name="End">
+      <extensionElements/>
+      <incoming>Flow_25b09b</incoming>
+      <incoming>Flow_b8bacf</incoming>
+    </endEvent>
+    <endEvent id="EndEvent_54a1a2" name="Cancelled C">
+      <extensionElements/>
+      <incoming>Flow_f9aa02</incoming>
+    </endEvent>
+    <boundaryEvent attachedToRef="UserTask_d85bd0" cancelActivity="true" id="MessageBoundaryEvent_3568cd" name="Cancel C">
+      <extensionElements/>
+      <outgoing>Flow_f9aa02</outgoing>
+      <messageEventDefinition id="MessageEventDefinition_3568cd" messageRef="Message_3568cd"/>
+    </boundaryEvent>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_a197a4" name="A">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_44038c</incoming>
+      <outgoing>Flow_1d6eee</outgoing>
+      <outgoing>Flow_c34539</outgoing>
+      <ioSpecification id="IoSpecification_a197a4">
+        <inputSet id="InputSet_a197a4"/>
+        <outputSet id="OutputSet_a197a4"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_64cc51" name="B">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_1d6eee</incoming>
+      <outgoing>Flow_780374</outgoing>
+      <ioSpecification id="IoSpecification_64cc51">
+        <inputSet id="InputSet_64cc51"/>
+        <outputSet id="OutputSet_64cc51"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_d85bd0" name="C">
+      <extensionElements>
+        <camunda:properties/>
+      </extensionElements>
+      <incoming>Flow_c34539</incoming>
+      <outgoing>Flow_25b09b</outgoing>
+      <ioSpecification id="IoSpecification_d85bd0">
+        <inputSet id="InputSet_d85bd0"/>
+        <outputSet id="OutputSet_d85bd0"/>
+      </ioSpecification>
+    </userTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_processesappx::module_1_1-reports-reports_service::process_triggereventintent" id="ServiceTask_e7970f" name="Cancel C">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="PROCESS_TRIGGEREVENTINTENT_MESSAGENAME">Message_3568cd</camunda:inputParameter>
+          <camunda:inputParameter name="PROCESS_TRIGGEREVENTINTENT_MESSAGEVARS"/>
+          <camunda:inputParameter name="PROCESS_TRIGGEREVENTINTENT_PROCEXID"/>
+          <camunda:inputParameter name="serviceKey">PROCESS_TRIGGEREVENTINTENT</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_780374</incoming>
+      <outgoing>Flow_b8bacf</outgoing>
+      <ioSpecification id="IoSpecification_e7970f">
+        <inputSet id="InputSet_e7970f"/>
+        <outputSet id="OutputSet_e7970f"/>
+      </ioSpecification>
+    </serviceTask>
+    <sequenceFlow id="Flow_44038c" sourceRef="StartEvent_117b52" targetRef="UserTask_a197a4"/>
+    <sequenceFlow id="Flow_1d6eee" sourceRef="UserTask_a197a4" targetRef="UserTask_64cc51"/>
+    <sequenceFlow id="Flow_c34539" sourceRef="UserTask_a197a4" targetRef="UserTask_d85bd0"/>
+    <sequenceFlow id="Flow_25b09b" sourceRef="UserTask_d85bd0" targetRef="EndEvent_ea494d"/>
+    <sequenceFlow id="Flow_780374" sourceRef="UserTask_64cc51" targetRef="ServiceTask_e7970f"/>
+    <sequenceFlow id="Flow_b8bacf" sourceRef="ServiceTask_e7970f" targetRef="EndEvent_ea494d"/>
+    <sequenceFlow id="Flow_f9aa02" sourceRef="MessageBoundaryEvent_3568cd" targetRef="EndEvent_54a1a2"/>
+  </process>
+  <message id="Message_3568cd" name="Message_3568cd"/>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_9e1352">
+    <bpmndi:BPMNPlane id="Plane_9e1352">
+      <bpmndi:BPMNShape bpmnElement="StartEvent_117b52" id="StartEvent_117b52_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="144.0" y="108.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_ea494d" id="EndEvent_ea494d_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="816.0" y="108.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_54a1a2" id="EndEvent_54a1a2_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="696.0" y="222.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="MessageBoundaryEvent_3568cd" id="MessageBoundaryEvent_3568cd_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="521.0" y="259.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_a197a4" id="UserTask_a197a4_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="300.0" y="108.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_64cc51" id="UserTask_64cc51_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="492.0" y="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_d85bd0" id="UserTask_d85bd0_di" isExpanded="true">
+        <dc:Bounds height="97.0" width="109.0" x="497.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_e7970f" id="ServiceTask_e7970f_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="660.0" y="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_44038c" id="Flow_44038c_di" sourceElement="StartEvent_117b52_di" targetElement="UserTask_a197a4_di">
+        <di:waypoint x="180.0" y="126.0"/>
+        <di:waypoint x="300.0" y="135.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_1d6eee" id="Flow_1d6eee_di" sourceElement="UserTask_a197a4_di" targetElement="UserTask_64cc51_di">
+        <di:waypoint x="420.0" y="135.5"/>
+        <di:waypoint x="492.0" y="63.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_c34539" id="Flow_c34539_di" sourceElement="UserTask_a197a4_di" targetElement="UserTask_d85bd0_di">
+        <di:waypoint x="420.0" y="135.5"/>
+        <di:waypoint x="497.0" y="228.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_25b09b" id="Flow_25b09b_di" sourceElement="UserTask_d85bd0_di" targetElement="EndEvent_ea494d_di">
+        <di:waypoint x="606.0" y="228.5"/>
+        <di:waypoint x="816.0" y="126.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_780374" id="Flow_780374_di" sourceElement="UserTask_64cc51_di" targetElement="ServiceTask_e7970f_di">
+        <di:waypoint x="612.0" y="63.5"/>
+        <di:waypoint x="660.0" y="63.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_b8bacf" id="Flow_b8bacf_di" sourceElement="ServiceTask_e7970f_di" targetElement="EndEvent_ea494d_di">
+        <di:waypoint x="780.0" y="63.5"/>
+        <di:waypoint x="816.0" y="126.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_f9aa02" id="Flow_f9aa02_di" sourceElement="MessageBoundaryEvent_3568cd_di" targetElement="EndEvent_54a1a2_di">
+        <di:waypoint x="557.0" y="277.0"/>
+        <di:waypoint x="696.0" y="240.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
