@@ -19,13 +19,10 @@
       </properties>
     </element>
     <element identifier="id-432da3" xsi:type="BusinessProcess">
-      <name xml:lang="de">B</name>
+      <name xml:lang="de">C</name>
       <properties>
         <property propertyDefinitionRef="propid-2">
           <value xml:lang="de">UserTask</value>
-        </property>
-        <property propertyDefinitionRef="propid-3">
-          <value xml:lang="de" />
         </property>
       </properties>
     </element>
@@ -35,7 +32,7 @@
         <property propertyDefinitionRef="propid-2">
           <value xml:lang="de">UserTask</value>
         </property>
-        <property propertyDefinitionRef="propid-4">
+        <property propertyDefinitionRef="propid-3">
           <value xml:lang="de" />
         </property>
       </properties>
@@ -48,15 +45,15 @@
         </property>
       </properties>
     </element>
-    <element identifier="id-667fc2" xsi:type="OrJunction">
-      <name xml:lang="de">Junction</name>
+    <element identifier="id-5cf843" xsi:type="BusinessProcess">
+      <name xml:lang="de">B</name>
       <properties>
-        <property propertyDefinitionRef="propid-1">
-          <value xml:lang="de">exclusivegateway</value>
+        <property propertyDefinitionRef="propid-2">
+          <value xml:lang="de">UserTask</value>
         </property>
       </properties>
     </element>
-    <element identifier="id-62a104" xsi:type="OrJunction">
+    <element identifier="id-667fc2" xsi:type="OrJunction">
       <name xml:lang="de">Junction</name>
       <properties>
         <property propertyDefinitionRef="propid-1">
@@ -67,37 +64,22 @@
   </elements>
   <relationships>
     <relationship identifier="id-832a00" source="id-667fc2" target="id-432da3" xsi:type="Triggering">
-      <name xml:lang="de">Def</name>
+      <name xml:lang="de">C</name>
       <properties>
-        <property propertyDefinitionRef="propid-5">
-          <value xml:lang="de">true</value>
+        <property propertyDefinitionRef="propid-4">
+          <value xml:lang="de">${check.equals('C')}</value>
         </property>
       </properties>
     </relationship>
-    <relationship identifier="id-429a54" source="id-667fc2" target="id-ea494d" xsi:type="Triggering">
-      <name xml:lang="de">End</name>
-      <properties>
-        <property propertyDefinitionRef="propid-6">
-          <value xml:lang="de">${check.equals('End')}</value>
-        </property>
-      </properties>
-    </relationship>
-    <relationship identifier="id-84aa65" source="id-432da3" target="id-62a104" xsi:type="Triggering" />
     <relationship identifier="id-236815" source="id-117b52" target="id-5ac391" xsi:type="Triggering" />
     <relationship identifier="id-82166f" source="id-5ac391" target="id-667fc2" xsi:type="Triggering" />
-    <relationship identifier="id-459854" source="id-62a104" target="id-89d14a" xsi:type="Triggering">
-      <name xml:lang="de">End2</name>
+    <relationship identifier="id-5621d3" source="id-432da3" target="id-89d14a" xsi:type="Triggering" />
+    <relationship identifier="id-2048f2" source="id-5cf843" target="id-ea494d" xsi:type="Triggering" />
+    <relationship identifier="id-dbe485" source="id-667fc2" target="id-5cf843" xsi:type="Triggering">
+      <name xml:lang="de">B</name>
       <properties>
-        <property propertyDefinitionRef="propid-6">
-          <value xml:lang="de">${check2.equals('End2')}</value>
-        </property>
-      </properties>
-    </relationship>
-    <relationship identifier="id-3e702e" source="id-62a104" target="id-5ac391" xsi:type="Triggering">
-      <name xml:lang="de">Def</name>
-      <properties>
-        <property propertyDefinitionRef="propid-5">
-          <value xml:lang="de">true</value>
+        <property propertyDefinitionRef="propid-4">
+          <value xml:lang="de">${check.equals('B')}</value>
         </property>
       </properties>
     </relationship>
@@ -110,21 +92,20 @@
       <item identifierRef="id-432da3" />
       <item identifierRef="id-5ac391" />
       <item identifierRef="id-89d14a" />
+      <item identifierRef="id-5cf843" />
     </item>
     <item>
       <label xml:lang="de">Other</label>
       <item identifierRef="id-667fc2" />
-      <item identifierRef="id-62a104" />
     </item>
     <item>
       <label xml:lang="de">Relations</label>
       <item identifierRef="id-832a00" />
-      <item identifierRef="id-429a54" />
-      <item identifierRef="id-84aa65" />
       <item identifierRef="id-236815" />
       <item identifierRef="id-82166f" />
-      <item identifierRef="id-459854" />
-      <item identifierRef="id-3e702e" />
+      <item identifierRef="id-5621d3" />
+      <item identifierRef="id-2048f2" />
+      <item identifierRef="id-dbe485" />
     </item>
     <item>
       <label xml:lang="de">Views</label>
@@ -132,17 +113,11 @@
     </item>
   </organizations>
   <propertyDefinitions>
-    <propertyDefinition identifier="propid-6" type="string">
+    <propertyDefinition identifier="propid-4" type="string">
       <name>conditionexpression</name>
     </propertyDefinition>
-    <propertyDefinition identifier="propid-5" type="string">
-      <name>default</name>
-    </propertyDefinition>
-    <propertyDefinition identifier="propid-4" type="string">
-      <name>string:check</name>
-    </propertyDefinition>
     <propertyDefinition identifier="propid-3" type="string">
-      <name>string:check2</name>
+      <name>string:check</name>
     </propertyDefinition>
     <propertyDefinition identifier="propid-1" type="string">
       <name>subClass</name>
@@ -155,7 +130,7 @@
     <diagrams>
       <view identifier="id-727cc4" xsi:type="Diagram">
         <name xml:lang="de">Default View</name>
-        <node identifier="id-e16e62" elementRef="id-117b52" xsi:type="Element" x="60" y="176" w="120" h="55">
+        <node identifier="id-e16e62" elementRef="id-117b52" xsi:type="Element" x="72" y="176" w="120" h="55">
           <style>
             <fillColor r="255" g="255" b="181" a="100" />
             <lineColor r="92" g="92" b="92" a="100" />
@@ -164,7 +139,7 @@
             </font>
           </style>
         </node>
-        <node identifier="id-451009" elementRef="id-ea494d" xsi:type="Element" x="444" y="122" w="120" h="55">
+        <node identifier="id-451009" elementRef="id-ea494d" xsi:type="Element" x="588" y="122" w="120" h="55">
           <style>
             <fillColor r="255" g="255" b="181" a="100" />
             <lineColor r="92" g="92" b="92" a="100" />
@@ -191,15 +166,6 @@
             </font>
           </style>
         </node>
-        <node identifier="id-34ddcb" elementRef="id-62a104" xsi:type="Element" x="600" y="248" w="15" h="15">
-          <style>
-            <fillColor r="0" g="0" b="0" a="100" />
-            <lineColor r="92" g="92" b="92" a="100" />
-            <font name="Segoe UI" size="9">
-              <color r="0" g="0" b="0" />
-            </font>
-          </style>
-        </node>
         <node identifier="id-39f325" elementRef="id-5ac391" xsi:type="Element" x="228" y="176" w="120" h="55">
           <style>
             <fillColor r="255" g="255" b="181" a="100" />
@@ -209,7 +175,16 @@
             </font>
           </style>
         </node>
-        <node identifier="id-6f920b" elementRef="id-89d14a" xsi:type="Element" x="672" y="228" w="120" h="55">
+        <node identifier="id-6f920b" elementRef="id-89d14a" xsi:type="Element" x="588" y="228" w="120" h="55">
+          <style>
+            <fillColor r="255" g="255" b="181" a="100" />
+            <lineColor r="92" g="92" b="92" a="100" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </node>
+        <node identifier="id-80a96a" elementRef="id-5cf843" xsi:type="Element" x="432" y="122" w="120" h="55">
           <style>
             <fillColor r="255" g="255" b="181" a="100" />
             <lineColor r="92" g="92" b="92" a="100" />
@@ -226,7 +201,7 @@
             </font>
           </style>
         </connection>
-        <connection identifier="id-82a728" relationshipRef="id-84aa65" xsi:type="Relationship" source="id-ed3a40" target="id-34ddcb">
+        <connection identifier="id-e94ab4" relationshipRef="id-5621d3" xsi:type="Relationship" source="id-ed3a40" target="id-6f920b">
           <style>
             <lineColor r="0" g="0" b="0" />
             <font name="Segoe UI" size="9">
@@ -242,33 +217,23 @@
             </font>
           </style>
         </connection>
-        <connection identifier="id-d9a77c" relationshipRef="id-429a54" xsi:type="Relationship" source="id-be7aed" target="id-451009">
+        <connection identifier="id-4af5fe" relationshipRef="id-dbe485" xsi:type="Relationship" source="id-be7aed" target="id-80a96a">
           <style>
             <lineColor r="0" g="0" b="0" />
             <font name="Segoe UI" size="9">
               <color r="0" g="0" b="0" />
             </font>
           </style>
-        </connection>
-        <connection identifier="id-8277ca" relationshipRef="id-459854" xsi:type="Relationship" source="id-34ddcb" target="id-6f920b">
-          <style>
-            <lineColor r="0" g="0" b="0" />
-            <font name="Segoe UI" size="9">
-              <color r="0" g="0" b="0" />
-            </font>
-          </style>
-        </connection>
-        <connection identifier="id-c9ac11" relationshipRef="id-3e702e" xsi:type="Relationship" source="id-34ddcb" target="id-39f325">
-          <style>
-            <lineColor r="0" g="0" b="0" />
-            <font name="Segoe UI" size="9">
-              <color r="0" g="0" b="0" />
-            </font>
-          </style>
-          <bendpoint x="612" y="312" />
-          <bendpoint x="336" y="312" />
         </connection>
         <connection identifier="id-c0d0d7" relationshipRef="id-82166f" xsi:type="Relationship" source="id-39f325" target="id-be7aed">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+        <connection identifier="id-6f092d" relationshipRef="id-2048f2" xsi:type="Relationship" source="id-80a96a" target="id-451009">
           <style>
             <lineColor r="0" g="0" b="0" />
             <font name="Segoe UI" size="9">

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="WP12" id="id-9e1352c99e504fa4a70f61bfc1b10c8f" version="5.0.0">
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="WP10" id="id-9e1352c99e504fa4a70f61bfc1b10c8f" version="5.0.0">
   <folder name="Strategy" id="id-67070708017045278839b4e7a1022db2" type="strategy"/>
   <folder name="Business" id="id-55702fd05c5848f785aa2196abca8482" type="business">
     <element xsi:type="archimate:BusinessEvent" name="Start" id="id-117b522762fa4ee49e3e9e70895d23be">
