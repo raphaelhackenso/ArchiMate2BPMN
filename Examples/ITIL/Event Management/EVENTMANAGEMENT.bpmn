@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_5647dd" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <collaboration id="Collaboration_5647dd">
+    <participant id="Participant_6e6fbc" name="Check Server" processRef="PROCESS_6E6FBC"/>
+  </collaboration>
+  <process id="PROCESS_6E6FBC" isExecutable="true" name="Check Server">
+    <laneSet id="LaneSet_6e6fbc">
+      <lane id="Lane_44b71d" name="System">
+        <flowNodeRef>MessageStartEvent_dbde56</flowNodeRef>
+        <flowNodeRef>EndEvent_5a80f7</flowNodeRef>
+        <flowNodeRef>ServiceTask_d99412</flowNodeRef>
+        <flowNodeRef>ServiceTask_63009b</flowNodeRef>
+        <flowNodeRef>ServiceTask_705890</flowNodeRef>
+      </lane>
+      <lane id="Lane_77fad7" name="IT-Operations">
+        <flowNodeRef>EndEvent_21b11d</flowNodeRef>
+        <flowNodeRef>UserTask_e1c481</flowNodeRef>
+        <flowNodeRef>ExclusiveGateway_8b2e19</flowNodeRef>
+      </lane>
+    </laneSet>
+    <startEvent id="MessageStartEvent_dbde56" name="Eingehendes Event">
+      <extensionElements>
+        <camunda:formData>
+          <camunda:formField defaultValue="" id="title" label="title" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="forasset" label="forasset" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-asset-asset_asset"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="description" label="description" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <outgoing>Flow_f79b27</outgoing>
+      <messageEventDefinition id="MessageEventDefinition_dbde56" messageRef="Message_dbde56"/>
+    </startEvent>
+    <endEvent id="EndEvent_21b11d" name="Gelöst">
+      <extensionElements/>
+      <incoming>Flow_a6450a</incoming>
+    </endEvent>
+    <endEvent id="EndEvent_5a80f7" name="Eskalation">
+      <extensionElements/>
+      <incoming>Flow_a438da</incoming>
+    </endEvent>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_e1c481" name="Event bearbeiten">
+      <extensionElements>
+        <camunda:properties/>
+        <camunda:formData>
+          <camunda:formField defaultValue="" id="title" label="title" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="forasset" label="forasset" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-asset-asset_asset"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="description" label="description" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="eventloesbar" label="eventloesbar" type="boolean">
+            <camunda:properties>
+              <camunda:property id="control" value="boolean"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="dokumentation" label="dokumentation" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <incoming>Flow_f4226c</incoming>
+      <outgoing>Flow_0230ee</outgoing>
+      <ioSpecification id="IoSpecification_e1c481">
+        <inputSet id="InputSet_e1c481"/>
+        <outputSet id="OutputSet_e1c481"/>
+      </ioSpecification>
+    </userTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_servicemanagement::module_1_1-reports-reports_service::services_createeventblock" id="ServiceTask_d99412" name="Event erfassen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="SERVICES_CREATEEVENTBLOCK_EVENTTYPE">WARN</camunda:inputParameter>
+          <camunda:inputParameter name="SUMMARY">${title}</camunda:inputParameter>
+          <camunda:inputParameter name="SERVICES_CREATEEVENTBLOCK_AFFECTEDASSET">${forAsset}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">${description}</camunda:inputParameter>
+          <camunda:inputParameter name="VARPREFIX"/>
+          <camunda:inputParameter name="serviceKey">SERVICES_CREATEEVENTBLOCK</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_f79b27</incoming>
+      <outgoing>Flow_39af95</outgoing>
+      <ioSpecification id="IoSpecification_d99412">
+        <inputSet id="InputSet_d99412"/>
+        <outputSet id="OutputSet_d99412"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetcommmsgbase::module_1_1-reports-reports_service::comm_sendemail" id="ServiceTask_63009b" name="Nachricht senden">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="SENDTOEMAILADDR">51841312@edu.campus02.at</camunda:inputParameter>
+          <camunda:inputParameter name="SUBJECT">Neues Event zu Asset: ${forAsset} - ${title}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">${description}</camunda:inputParameter>
+          <camunda:inputParameter name="CONTEXTOBJID">${forAsset}</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">COMM_SENDEMAIL</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_39af95</incoming>
+      <outgoing>Flow_f4226c</outgoing>
+      <ioSpecification id="IoSpecification_63009b">
+        <inputSet id="InputSet_63009b"/>
+        <outputSet id="OutputSet_63009b"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetcommmsgbase::module_1_1-reports-reports_service::comm_sendemail" id="ServiceTask_705890" name="Eskalation senden">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="SENDTOEMAILADDR">51841312@edu.campus02.at</camunda:inputParameter>
+          <camunda:inputParameter name="SUBJECT">Eskalation zu Event für Asset: ${forAsset} - ${title}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">${description}</camunda:inputParameter>
+          <camunda:inputParameter name="CONTEXTOBJID"/>
+          <camunda:inputParameter name="serviceKey">COMM_SENDEMAIL</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_5e750c</incoming>
+      <outgoing>Flow_a438da</outgoing>
+      <ioSpecification id="IoSpecification_705890">
+        <inputSet id="InputSet_705890"/>
+        <outputSet id="OutputSet_705890"/>
+      </ioSpecification>
+    </serviceTask>
+    <exclusiveGateway default="Flow_5e750c" id="ExclusiveGateway_8b2e19" name="Event gelöst?">
+      <extensionElements/>
+      <incoming>Flow_0230ee</incoming>
+      <outgoing>Flow_a6450a</outgoing>
+      <outgoing>Flow_5e750c</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="Flow_f79b27" sourceRef="MessageStartEvent_dbde56" targetRef="ServiceTask_d99412"/>
+    <sequenceFlow id="Flow_39af95" sourceRef="ServiceTask_d99412" targetRef="ServiceTask_63009b"/>
+    <sequenceFlow id="Flow_f4226c" sourceRef="ServiceTask_63009b" targetRef="UserTask_e1c481"/>
+    <sequenceFlow id="Flow_0230ee" sourceRef="UserTask_e1c481" targetRef="ExclusiveGateway_8b2e19"/>
+    <sequenceFlow id="Flow_a6450a" sourceRef="ExclusiveGateway_8b2e19" targetRef="EndEvent_21b11d">
+      <conditionExpression id="conditionExpression_7d3da81d-7f91-43e9-bd08-ef5ead17fad4">${execution.getVariable('eventloesbar')}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_5e750c" sourceRef="ExclusiveGateway_8b2e19" targetRef="ServiceTask_705890"/>
+    <sequenceFlow id="Flow_a438da" sourceRef="ServiceTask_705890" targetRef="EndEvent_5a80f7"/>
+  </process>
+  <message id="Message_dbde56" name="Message_dbde56"/>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_5647dd">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_5647dd" id="Plane_5647dd">
+      <bpmndi:BPMNShape bpmnElement="Participant_6e6fbc" id="BPMNShape_7ba7bb9e-a6a5-433a-9818-3799cc34c923" isHorizontal="true">
+        <dc:Bounds height="385.0" width="938.0" x="407.0" y="36.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Lane_44b71d" id="BPMNShape_b3f5b1c7-2f1a-447f-9089-46749e2668ff" isHorizontal="true">
+        <dc:Bounds height="145.0" width="908.0" x="437.0" y="72.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Lane_77fad7" id="BPMNShape_c1ee5260-7a55-41ff-9fda-e3a736b69fe6" isHorizontal="true">
+        <dc:Bounds height="169.0" width="908.0" x="437.0" y="228.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="MessageStartEvent_dbde56" id="MessageStartEvent_dbde56_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="467.0" y="120.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_21b11d" id="EndEvent_21b11d_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="1067.0" y="309.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_5a80f7" id="EndEvent_5a80f7_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="1187.0" y="120.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_e1c481" id="UserTask_e1c481_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="803.0" y="309.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_d99412" id="ServiceTask_d99412_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="623.0" y="120.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_63009b" id="ServiceTask_63009b_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="767.0" y="120.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_705890" id="ServiceTask_705890_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="1019.0" y="120.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_8b2e19" id="ExclusiveGateway_8b2e19_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="959.0" y="329.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_f79b27" id="Flow_f79b27_di" sourceElement="MessageStartEvent_dbde56_di" targetElement="ServiceTask_d99412_di">
+        <di:waypoint x="503.0" y="138.0"/>
+        <di:waypoint x="623.0" y="147.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_39af95" id="Flow_39af95_di" sourceElement="ServiceTask_d99412_di" targetElement="ServiceTask_63009b_di">
+        <di:waypoint x="743.0" y="147.5"/>
+        <di:waypoint x="767.0" y="147.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_f4226c" id="Flow_f4226c_di" sourceElement="ServiceTask_63009b_di" targetElement="UserTask_e1c481_di">
+        <di:waypoint x="887.0" y="147.5"/>
+        <di:waypoint x="803.0" y="336.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_0230ee" id="Flow_0230ee_di" sourceElement="UserTask_e1c481_di" targetElement="ExclusiveGateway_8b2e19_di">
+        <di:waypoint x="923.0" y="336.5"/>
+        <di:waypoint x="959.0" y="354.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_a6450a" id="Flow_a6450a_di" sourceElement="ExclusiveGateway_8b2e19_di" targetElement="EndEvent_21b11d_di">
+        <di:waypoint x="1009.0" y="354.0"/>
+        <di:waypoint x="1067.0" y="327.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_5e750c" id="Flow_5e750c_di" sourceElement="ExclusiveGateway_8b2e19_di" targetElement="ServiceTask_705890_di">
+        <di:waypoint x="1009.0" y="354.0"/>
+        <di:waypoint x="1019.0" y="147.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_a438da" id="Flow_a438da_di" sourceElement="ServiceTask_705890_di" targetElement="EndEvent_5a80f7_di">
+        <di:waypoint x="1139.0" y="147.5"/>
+        <di:waypoint x="1187.0" y="138.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
