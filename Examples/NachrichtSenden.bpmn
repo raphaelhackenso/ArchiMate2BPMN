@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_826e5b" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <collaboration id="Collaboration_826e5b">
+    <participant id="Participant_db850d" name="Nachricht senden" processRef="PROCESS_DB850D"/>
+  </collaboration>
+  <process id="PROCESS_DB850D" isExecutable="true" name="Nachricht senden">
+    <startEvent id="StartEvent_0206e3" name="Nachricht eintragen">
+      <extensionElements>
+        <camunda:formData>
+          <camunda:formField defaultValue="" id="titel" label="titel" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="inhalt" label="inhalt" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <outgoing>Flow_d3048a</outgoing>
+    </startEvent>
+    <endEvent id="EndEvent_93b537" name="Prozess beenden">
+      <extensionElements/>
+      <incoming>Flow_0b7d46</incoming>
+    </endEvent>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetcommmsgbase::module_1_1-reports-reports_service::comm_sendemail" id="ServiceTask_ccb274" name="Nachricht per E-Mail senden">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="SENDTOEMAILADDR">51841312@edu.campus02.at</camunda:inputParameter>
+          <camunda:inputParameter name="SUBJECT">${titel}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">${inhalt}</camunda:inputParameter>
+          <camunda:inputParameter name="CONTEXTOBJID"/>
+          <camunda:inputParameter name="serviceKey">COMM_SENDEMAIL</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_d3048a</incoming>
+      <outgoing>Flow_0b7d46</outgoing>
+      <ioSpecification id="IoSpecification_ccb274">
+        <inputSet id="InputSet_ccb274"/>
+        <outputSet id="OutputSet_ccb274"/>
+      </ioSpecification>
+    </serviceTask>
+    <sequenceFlow id="Flow_d3048a" sourceRef="StartEvent_0206e3" targetRef="ServiceTask_ccb274"/>
+    <sequenceFlow id="Flow_0b7d46" sourceRef="ServiceTask_ccb274" targetRef="EndEvent_93b537"/>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_826e5b">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_826e5b" id="Plane_826e5b">
+      <bpmndi:BPMNShape bpmnElement="Participant_db850d" id="BPMNShape_6012760f-0ca2-4010-a324-9341161dac58" isHorizontal="true">
+        <dc:Bounds height="121.0" width="601.0" x="180.0" y="168.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="StartEvent_0206e3" id="StartEvent_0206e3_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="228.0" y="216.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_93b537" id="EndEvent_93b537_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="624.0" y="216.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_ccb274" id="ServiceTask_ccb274_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="169.0" x="396.0" y="216.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_d3048a" id="Flow_d3048a_di" sourceElement="StartEvent_0206e3_di" targetElement="ServiceTask_ccb274_di">
+        <di:waypoint x="264.0" y="234.0"/>
+        <di:waypoint x="396.0" y="243.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_0b7d46" id="Flow_0b7d46_di" sourceElement="ServiceTask_ccb274_di" targetElement="EndEvent_93b537_di">
+        <di:waypoint x="565.0" y="243.5"/>
+        <di:waypoint x="624.0" y="234.0"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

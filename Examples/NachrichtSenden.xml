@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model xmlns="http://www.opengroup.org/xsd/archimate/3.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengroup.org/xsd/archimate/3.0/ http://www.opengroup.org/xsd/archimate/3.1/archimate3_Diagram.xsd" identifier="id-826e5b">
+  <name xml:lang="de">NachrichtSenden</name>
+  <elements>
+    <element identifier="id-0206e3" xsi:type="BusinessEvent">
+      <name xml:lang="de">Nachricht eintragen</name>
+      <properties>
+        <property propertyDefinitionRef="propid-1">
+          <value xml:lang="de">StartEvent</value>
+        </property>
+        <property propertyDefinitionRef="propid-2">
+          <value xml:lang="de" />
+        </property>
+        <property propertyDefinitionRef="propid-3">
+          <value xml:lang="de" />
+        </property>
+      </properties>
+    </element>
+    <element identifier="id-93b537" xsi:type="BusinessEvent">
+      <name xml:lang="de">Prozess beenden</name>
+      <properties>
+        <property propertyDefinitionRef="propid-1">
+          <value xml:lang="de">EndEvent</value>
+        </property>
+      </properties>
+    </element>
+    <element identifier="id-ccb274" xsi:type="ApplicationFunction">
+      <name xml:lang="de">Nachricht per E-Mail senden</name>
+      <properties>
+        <property propertyDefinitionRef="propid-4">
+          <value xml:lang="de">comm_sendemail</value>
+        </property>
+        <property propertyDefinitionRef="propid-5">
+          <value xml:lang="de">51841312@edu.campus02.at</value>
+        </property>
+        <property propertyDefinitionRef="propid-6">
+          <value xml:lang="de">${titel}</value>
+        </property>
+        <property propertyDefinitionRef="propid-7">
+          <value xml:lang="de">${inhalt}</value>
+        </property>
+      </properties>
+    </element>
+    <element identifier="id-db850d" xsi:type="Location">
+      <name xml:lang="de">Nachricht senden</name>
+    </element>
+  </elements>
+  <relationships>
+    <relationship identifier="id-9d3dcf" source="id-db850d" target="id-0206e3" xsi:type="Composition" />
+    <relationship identifier="id-f0375d" source="id-db850d" target="id-ccb274" xsi:type="Composition" />
+    <relationship identifier="id-d3048a" source="id-0206e3" target="id-ccb274" xsi:type="Triggering" />
+    <relationship identifier="id-d45be3" source="id-db850d" target="id-93b537" xsi:type="Composition" />
+    <relationship identifier="id-0b7d46" source="id-ccb274" target="id-93b537" xsi:type="Triggering" />
+  </relationships>
+  <organizations>
+    <item>
+      <label xml:lang="de">Business</label>
+      <item identifierRef="id-0206e3" />
+      <item identifierRef="id-93b537" />
+    </item>
+    <item>
+      <label xml:lang="de">Application</label>
+      <item identifierRef="id-ccb274" />
+    </item>
+    <item>
+      <label xml:lang="de">Other</label>
+      <item identifierRef="id-db850d" />
+    </item>
+    <item>
+      <label xml:lang="de">Relations</label>
+      <item identifierRef="id-9d3dcf" />
+      <item identifierRef="id-f0375d" />
+      <item identifierRef="id-d3048a" />
+      <item identifierRef="id-d45be3" />
+      <item identifierRef="id-0b7d46" />
+    </item>
+    <item>
+      <label xml:lang="de">Views</label>
+      <item identifierRef="id-8037ec" />
+    </item>
+  </organizations>
+  <propertyDefinitions>
+    <propertyDefinition identifier="propid-7" type="string">
+      <name>DESCRIPTION</name>
+    </propertyDefinition>
+    <propertyDefinition identifier="propid-5" type="string">
+      <name>SENDTOEMAILADDR</name>
+    </propertyDefinition>
+    <propertyDefinition identifier="propid-6" type="string">
+      <name>SUBJECT</name>
+    </propertyDefinition>
+    <propertyDefinition identifier="propid-3" type="string">
+      <name>richtext:inhalt</name>
+    </propertyDefinition>
+    <propertyDefinition identifier="propid-2" type="string">
+      <name>string:titel</name>
+    </propertyDefinition>
+    <propertyDefinition identifier="propid-1" type="string">
+      <name>subClass</name>
+    </propertyDefinition>
+    <propertyDefinition identifier="propid-4" type="string">
+      <name>template</name>
+    </propertyDefinition>
+  </propertyDefinitions>
+  <views>
+    <diagrams>
+      <view identifier="id-8037ec" xsi:type="Diagram">
+        <name xml:lang="de">Default View</name>
+        <node identifier="id-810b1b" elementRef="id-db850d" xsi:type="Element" x="180" y="168" w="601" h="121">
+          <style>
+            <fillColor r="237" g="207" b="226" a="100" />
+            <lineColor r="92" g="92" b="92" a="100" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+          <node identifier="id-041a72" elementRef="id-0206e3" xsi:type="Element" x="228" y="216" w="120" h="55">
+            <style>
+              <fillColor r="255" g="255" b="181" a="100" />
+              <lineColor r="92" g="92" b="92" a="100" />
+              <font name="Segoe UI" size="9">
+                <color r="0" g="0" b="0" />
+              </font>
+            </style>
+          </node>
+          <node identifier="id-7d4e45" elementRef="id-ccb274" xsi:type="Element" x="396" y="216" w="169" h="55">
+            <style>
+              <fillColor r="181" g="255" b="255" a="100" />
+              <lineColor r="92" g="92" b="92" a="100" />
+              <font name="Segoe UI" size="9">
+                <color r="0" g="0" b="0" />
+              </font>
+            </style>
+          </node>
+          <node identifier="id-96d8db" elementRef="id-93b537" xsi:type="Element" x="624" y="216" w="120" h="55">
+            <style>
+              <fillColor r="255" g="255" b="181" a="100" />
+              <lineColor r="92" g="92" b="92" a="100" />
+              <font name="Segoe UI" size="9">
+                <color r="0" g="0" b="0" />
+              </font>
+            </style>
+          </node>
+        </node>
+        <connection identifier="id-070f6c" relationshipRef="id-d3048a" xsi:type="Relationship" source="id-041a72" target="id-7d4e45">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+        <connection identifier="id-e313fc" relationshipRef="id-0b7d46" xsi:type="Relationship" source="id-7d4e45" target="id-96d8db">
+          <style>
+            <lineColor r="0" g="0" b="0" />
+            <font name="Segoe UI" size="9">
+              <color r="0" g="0" b="0" />
+            </font>
+          </style>
+        </connection>
+      </view>
+    </diagrams>
+  </views>
+</model>
