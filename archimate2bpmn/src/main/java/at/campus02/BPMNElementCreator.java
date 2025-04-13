@@ -370,8 +370,8 @@ public class BPMNElementCreator {
             CamundaProperties tmpCamundaProperties = bpmnmodel.newInstance(CamundaProperties.class);
             tmpCamundaFormField.setCamundaProperties(tmpCamundaProperties);
 
-            String typeAndName = variable.getValue0().toLowerCase();
-            String typeOnly = typeAndName.substring(0, typeAndName.indexOf(":"));
+            String typeAndName = variable.getValue0();
+            String typeOnly = typeAndName.substring(0, typeAndName.indexOf(":")).toLowerCase();
             String nameOnly = typeAndName.substring(typeAndName.indexOf(":") + 1);
             String defaultValueOrContent = variable.getValue1();
 
@@ -437,7 +437,36 @@ public class BPMNElementCreator {
                         tmpCamundaProperties.getCamundaProperties().add(controlDate);
                     break;
                 case "enum":
-                    System.out.println("Handling enum selection.");
+                    tmpCamundaFormField.setCamundaId(nameOnly);
+                    tmpCamundaFormField.setCamundaLabel(nameOnly);
+                    tmpCamundaFormField.setCamundaType("enum");
+                    CamundaProperty controlEnum = bpmnmodel.newInstance(CamundaProperty.class);
+                        controlEnum.setCamundaId("control");
+                        controlEnum.setCamundaValue(typeOnly);
+                        tmpCamundaProperties.getCamundaProperties().add(controlEnum);
+                    CamundaProperty controlItemIdentifier = bpmnmodel.newInstance(CamundaProperty.class);
+                        controlItemIdentifier.setCamundaId("itemIdentifier");
+                        controlItemIdentifier.setCamundaValue(nameOnly);
+                        tmpCamundaProperties.getCamundaProperties().add(controlItemIdentifier);
+                    if(defaultValueOrContent == null || defaultValueOrContent.trim().isEmpty()){
+                        Main.abort("No values as X:LabelforX;Y:LabelforY provided");
+                    } else {
+                        String[] pairs = defaultValueOrContent.split(";");
+                        
+                        for(String pair : pairs){
+                            if (pair == null || pair.trim().isEmpty()) continue;
+                            String[] parts = pair.split(":");
+                            if (parts.length != 2) continue;
+                            
+                            String id = parts[0].trim();
+                            String name = parts[1].trim();
+
+                            CamundaValue camValue = bpmnmodel.newInstance(CamundaValue.class);
+                                camValue.setCamundaId(id);
+                                camValue.setCamundaName(name);
+                            tmpCamundaFormField.getCamundaValues().add(camValue);
+                        }
+                    }
                     break;
                 case "object":
                     tmpCamundaFormField.setCamundaId(nameOnly);
