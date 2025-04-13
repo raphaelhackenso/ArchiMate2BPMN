@@ -537,7 +537,7 @@ public class Main {
                         if(onInitPair != null) {
                             CamundaProperty onInitProp = bpmnmodel.newInstance(CamundaProperty.class);
                                 onInitProp.setCamundaName("onInit");
-                                onInitProp.setCamundaValue(onCompletePair.getValue1());
+                                onInitProp.setCamundaValue(onInitPair.getValue1());
                                 tCamundaProperties.addChildElement(onInitProp);
                         }
 

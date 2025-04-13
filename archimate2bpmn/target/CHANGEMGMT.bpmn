@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_dd3bff" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+  <collaboration id="Collaboration_dd3bff">
+    <participant id="Participant_7420b6" name="Change Management" processRef="CHANGEMGMT"/>
+  </collaboration>
+  <process id="CHANGEMGMT" isExecutable="true" name="Change Management">
+    <dataObject id="DataObject_d6a52b" isCollection="false" name="Erforderliche Maßnahmen">
+      <extensionElements/>
+    </dataObject>
+    <dataObjectReference dataObjectRef="DataObject_d6a52b" id="DataObjectReference_d6a52b" name="Erforderliche Maßnahmen">
+      <extensionElements>
+        <camunda:formData>
+          <camunda:formField defaultValue="" id="MassnahmeTitel" label="MassnahmeTitel" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="MassnahmeVerantwortung" label="MassnahmeVerantwortung" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-organization-organization_assignment"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="MassnahmeBeschreibung" label="MassnahmeBeschreibung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+    </dataObjectReference>
+    <dataObject id="DataObject_edcee1" isCollection="false" name="Aufgabe">
+      <extensionElements/>
+    </dataObject>
+    <dataObjectReference dataObjectRef="DataObject_edcee1" id="DataObjectReference_edcee1" name="Aufgabe">
+      <extensionElements>
+        <camunda:formData>
+          <camunda:formField defaultValue="" id="TaskBezeichnung" label="TaskBezeichnung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="TaskAssignee" label="TaskAssignee" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-organization-organization_assignment"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="false" id="alreadyProcessed" label="alreadyProcessed" type="boolean">
+            <camunda:properties>
+              <camunda:property id="control" value="boolean"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="taskC365UID" label="taskC365UID" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="TaskBeschreibung" label="TaskBeschreibung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="TaskErgebnis" label="TaskErgebnis" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+    </dataObjectReference>
+    <startEvent id="StartEvent_2cd91b" name="Change abwickeln Start">
+      <extensionElements>
+        <camunda:formData>
+          <camunda:formField defaultValue="&lt;h4&gt;Change umsetzen&lt;/h4&gt;&lt;p&gt;Willkommen im Change-Management-Prozess &lt;/p&gt;" id="staticcontent_head" type="staticcontent">
+            <camunda:properties>
+              <camunda:property id="control" value="staticcontent"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBezeichnung" label="ChangeBezeichnung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBeschreibung" label="ChangeBeschreibung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="FrhesterStarttermin" label="FrhesterStarttermin" type="date">
+            <camunda:properties>
+              <camunda:property id="control" value="date"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="GeplanterAbschluss" label="GeplanterAbschluss" type="date">
+            <camunda:properties>
+              <camunda:property id="control" value="date"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ChangeType" label="ChangeType" type="enum">
+            <camunda:properties>
+              <camunda:property id="control" value="enum"/>
+              <camunda:property id="itemIdentifier" value="ChangeType"/>
+            </camunda:properties>
+            <camunda:value id="N" name="Normal change"/>
+            <camunda:value id="S" name="Standard Change"/>
+            <camunda:value id="A" name="Notfall Change"/>
+          </camunda:formField>
+          <camunda:formField id="ChangeUmsetzungPruefenDurch" label="ChangeUmsetzungPruefenDurch" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-organization-organization_assignment"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_3_1-services-service_priority" id="priority" label="priority" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_3_1-services-service_priority"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_3_1-services-service_severity" id="severity" label="severity" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_3_1-services-service_severity"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-planning-planning_laboreffort" id="plannedEffortLabor" label="plannedEffortLabor" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-planning-planning_laboreffort"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-planning-planning_financeeffort" id="plannedEffortFinance" label="plannedEffortFinance" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-planning-planning_financeeffort"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-asset-asset_asset" id="forAsset" label="forAsset" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-asset-asset_asset"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+    </startEvent>
+  </process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_dd3bff">
+    <bpmndi:BPMNPlane bpmnElement="Collaboration_dd3bff" id="Plane_dd3bff">
+      <bpmndi:BPMNShape bpmnElement="Participant_7420b6" id="BPMNShape_ab99be79-5654-46cf-825a-7bc4ab14569b" isHorizontal="true">
+        <dc:Bounds height="405.0" width="835.0" x="210.0" y="184.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="DataObjectReference_d6a52b" id="DataObjectReference_d6a52b_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="246.0" y="220.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="DataObjectReference_edcee1" id="DataObjectReference_edcee1_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="402.0" y="220.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="StartEvent_2cd91b" id="StartEvent_2cd91b_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="246.0" y="376.0"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
