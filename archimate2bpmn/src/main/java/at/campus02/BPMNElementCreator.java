@@ -516,7 +516,7 @@ public class BPMNElementCreator {
                         multipleFiles.setCamundaValue("true");
                         tmpCamundaProperties.getCamundaProperties().add(multipleFiles);
                     break;
-                    case "richtext":
+                case "richtext":
                     tmpCamundaFormField.setCamundaId(nameOnly);
                     tmpCamundaFormField.setCamundaLabel(nameOnly);
                     tmpCamundaFormField.setCamundaType("string");
@@ -525,6 +525,20 @@ public class BPMNElementCreator {
                         controlRichttext.setCamundaId("control");
                         controlRichttext.setCamundaValue(typeOnly);
                         tmpCamundaProperties.getCamundaProperties().add(controlRichttext);
+                    break;
+                case "entity":
+                    tmpCamundaFormField.setCamundaId(nameOnly);
+                    tmpCamundaFormField.setCamundaLabel(nameOnly);
+                    tmpCamundaFormField.setCamundaType("entity");
+                    tmpCamundaFormField.setCamundaDefaultValue(defaultValueOrContent);
+                    CamundaProperty controlEntity = bpmnmodel.newInstance(CamundaProperty.class);
+                        controlEntity.setCamundaId("control");
+                        controlEntity.setCamundaValue(typeOnly);
+                        tmpCamundaProperties.getCamundaProperties().add(controlEntity);
+                    CamundaProperty entitiesFilter = bpmnmodel.newInstance(CamundaProperty.class);
+                        entitiesFilter.setCamundaId("entitiesFilter");
+                        entitiesFilter.setCamundaValue(defaultValueOrContent);
+                        tmpCamundaProperties.getCamundaProperties().add(entitiesFilter);
                     break;
                 case "orgchart":
                     tmpCamundaFormField.setCamundaId(nameOnly);
@@ -564,7 +578,7 @@ public class BPMNElementCreator {
 
 
     public static List<Pair<String, String>> findFormFields(List<Pair<String, String>> pairs) {
-        String[] possibleTypes = {"staticcontent", "string", "subform", "boolean", "expression", "date", "enum", "object", "file", "files", "richtext", "orgchart" ,"booleanswitch"};
+        String[] possibleTypes = {"staticcontent", "string", "subform", "boolean", "expression", "date", "enum", "object", "file", "files", "richtext", "orgchart" ,"booleanswitch", "entity"};
         List<Pair<String, String>> returnList = new ArrayList<>();
 
         for (Pair<String, String> pair : pairs) {
