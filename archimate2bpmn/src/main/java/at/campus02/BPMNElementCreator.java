@@ -31,6 +31,7 @@ import org.javatuples.Pair;
 
 import java.util.Map;
 
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
 
 import org.w3c.dom.*;
 
@@ -77,8 +78,7 @@ public class BPMNElementCreator {
                         tmpProcess.addChildElement(bpmnElement);
                     } else if ("BusinessFunction".equals(singleIncomingElement.getAttribute("xsi:type"))) {
                         // Is in a Subprocess
-                        SubProcess tmpSubProcess = BPMNElementCreator.findContainingSubProcess(subprocesses,
-                                singleIncomingElement);
+                        SubProcess tmpSubProcess = BPMNElementCreator.findContainingSubProcess(subprocesses, singleIncomingElement);
                         tmpSubProcess.addChildElement(bpmnElement);
                     }
                 }
@@ -379,6 +379,7 @@ public class BPMNElementCreator {
                 case "staticcontent":
                     tmpCamundaFormField.setCamundaId(nameOnly);
                     tmpCamundaFormField.setCamundaType(typeOnly);
+                    tmpCamundaFormField.setCamundaLabel(nameOnly);
                     tmpCamundaFormField.setCamundaDefaultValue(defaultValueOrContent);
                     CamundaProperty controlStaticcontent = bpmnmodel.newInstance(CamundaProperty.class);
                         controlStaticcontent.setCamundaId("control");
@@ -539,6 +540,14 @@ public class BPMNElementCreator {
                         entitiesFilter.setCamundaId("entitiesFilter");
                         entitiesFilter.setCamundaValue(defaultValueOrContent);
                         tmpCamundaProperties.getCamundaProperties().add(entitiesFilter);
+                    CamundaProperty reuseRow = bpmnmodel.newInstance(CamundaProperty.class);
+                        reuseRow.setCamundaId("reuseRow");
+                        reuseRow.setCamundaValue("true");
+                        tmpCamundaProperties.getCamundaProperties().add(reuseRow);
+                    CamundaProperty newRow = bpmnmodel.newInstance(CamundaProperty.class);
+                        newRow.setCamundaId("newrow");
+                        newRow.setCamundaValue("false");
+                        tmpCamundaProperties.getCamundaProperties().add(newRow);
                     break;
                 case "orgchart":
                     tmpCamundaFormField.setCamundaId(nameOnly);

@@ -1,0 +1,23 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Main",
+            "request": "launch",
+            "mainClass": "at.campus02.Main",
+            "projectName": "archimate2bpmn"
+        },
+        {
+            "type": "java",
+            "name": "Run JAR with Arguments",
+            "request": "launch",
+            "mainClass": "",
+            "vmArgs": "",
+            "args": "CHANGEMGMT.xml",
+            "cwd": "C:\\Users\\Administrator\\Desktop\\Masters2\\ArchiMate2BPMN\\archimate2bpmn\\target",
+            "console": "internalConsole",
+            "program": "C:\\Users\\Administrator\\Desktop\\Masters2\\ArchiMate2BPMN\\archimate2bpmn\\target\\archimate2bpmn-1.0.0-jar-with-dependencies.jar"
+        }
+    ]
+}

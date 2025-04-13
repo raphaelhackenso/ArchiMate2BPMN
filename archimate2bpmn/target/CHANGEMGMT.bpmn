@@ -1,9 +1,148 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_dd3bff" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
+<definitions xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:camunda="http://camunda.org/schema/1.0/bpmn" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" exporter="ArchiMate2BPMN" exporterVersion="1.0.0" id="definitions_dd3bff" targetNamespace="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL">
   <collaboration id="Collaboration_dd3bff">
-    <participant id="Participant_7420b6" name="Change Management" processRef="CHANGEMGMT"/>
+    <participant id="Participant_7420b6" name="Change Management" processRef="PROCESS_7420B6"/>
   </collaboration>
-  <process id="CHANGEMGMT" isExecutable="true" name="Change Management">
+  <process id="PROCESS_7420B6" isExecutable="true" name="Change Management">
+    <subProcess id="SUBPROCESS_993925" name="Einzelne Aufgabe">
+      <extensionElements/>
+      <multiInstanceLoopCharacteristics camunda:collection="tasks" camunda:elementVariable="task" id="multiInstanceLoopCharacteristics_993925" isSequential="false"/>
+      <startEvent id="StartEvent_22bc4a" name="Change Aufgabe abwickeln">
+        <extensionElements/>
+        <outgoing>Flow_faa02d</outgoing>
+      </startEvent>
+      <endEvent id="EndEvent_92c0ec" name="Bereits in Bearbeitung">
+        <extensionElements/>
+        <incoming>Flow_3dc2e3</incoming>
+      </endEvent>
+      <intermediateCatchEvent id="TimerEvent_eebaac" name="Verzögerung">
+        <extensionElements/>
+        <incoming>Flow_234b30</incoming>
+        <outgoing>Flow_59afa1</outgoing>
+        <timerEventDefinition id="TimerEventDefinition_eebaac">
+          <timeDuration id="timeDuration_04b1a9ab-6dc9-4b44-badf-6e68e880dfca">PT1S</timeDuration>
+        </timerEventDefinition>
+      </intermediateCatchEvent>
+      <endEvent id="EndEvent_5d7a53" name="Aufgabe erledigt">
+        <extensionElements/>
+        <incoming>Flow_3873b2</incoming>
+      </endEvent>
+      <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_d8809d" name="${changeItemIdentifier}: ${task.TaskBezeichnung}">
+        <extensionElements>
+          <camunda:properties>
+            <camunda:property name="onCreate" value="$servicemgmt.addTaskTo('module_3_1-services-service_rfc', &quot;${changeId}&quot;, $currentTask)$taskForm.updateFormValue(&quot;alreadyProcessed&quot;, true)$taskForm.updateValue(&quot;tasks&quot;, $!data.get('task').get('taskC365UID'), &quot;alreadyProcessed&quot;, true)$taskForm.setVariableFromTask(&quot;cockpitId&quot;, &quot;taskCockpitId&quot;)"/>
+            <camunda:property name="onComplete" value="$task.resolveTask($currentTask, &quot;${TaskErgebnis}&quot;)"/>
+            <camunda:property name="onInit" value="$taskForm.setObjectInstance(&quot;${changeId}&quot;)"/>
+          </camunda:properties>
+          <camunda:formData>
+            <camunda:formField defaultValue="&amp;#60;h3&amp;#62;Aufgabe ${changeItemIdentifier}: ${task.TaskBezeichnung}&amp;#60;/h3&amp;#62;" id="aufgabeheader" label="aufgabeheader" type="staticcontent">
+              <camunda:properties>
+                <camunda:property id="control" value="staticcontent"/>
+              </camunda:properties>
+            </camunda:formField>
+            <camunda:formField defaultValue="${task.TaskBezeichnung}" id="TaskBezeichnung" label="TaskBezeichnung" type="string">
+              <camunda:properties>
+                <camunda:property id="control" value="string"/>
+              </camunda:properties>
+            </camunda:formField>
+            <camunda:formField id="TaskAssignee" label="TaskAssignee" type="object">
+              <camunda:properties>
+                <camunda:property id="entitiesFilter" value="module_1_1-organization-organization_assignment"/>
+              </camunda:properties>
+            </camunda:formField>
+            <camunda:formField defaultValue="${task.TaskBeschreibung}" id="TaskBeschreibung" label="TaskBeschreibung" type="string">
+              <camunda:properties>
+                <camunda:property id="control" value="richtext"/>
+              </camunda:properties>
+            </camunda:formField>
+            <camunda:formField defaultValue="${task.TaskErgebnis}" id="TaskErgebnis" label="TaskErgebnis" type="string">
+              <camunda:properties>
+                <camunda:property id="control" value="richtext"/>
+              </camunda:properties>
+            </camunda:formField>
+            <camunda:formField defaultValue="${task.alreadyProcessed}" id="alreadyProcessed" label="alreadyProcessed" type="boolean">
+              <camunda:properties>
+                <camunda:property id="control" value="boolean"/>
+              </camunda:properties>
+            </camunda:formField>
+          </camunda:formData>
+        </extensionElements>
+        <incoming>Flow_44d387</incoming>
+        <outgoing>Flow_679042</outgoing>
+        <ioSpecification id="IoSpecification_d8809d">
+          <inputSet id="InputSet_d8809d"/>
+          <outputSet id="OutputSet_d8809d"/>
+        </ioSpecification>
+      </userTask>
+      <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetcommmsgbase::module_1_1-reports-reports_service::comm_sendemail" id="ServiceTask_81b8b2" name="Mail an verantwortliche Person schicken">
+        <extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="SENDTOEMAILADDR">${task.TaskAssignee}</camunda:inputParameter>
+            <camunda:inputParameter name="SUBJECT">Aufgabe für ${changeItemIdentifier} wurde an Sie zugewiesen</camunda:inputParameter>
+            <camunda:inputParameter name="DESCRIPTION">Eine Aufgabe für ${changeItemIdentifier} wurde an Sie zugewiesen:Task Bezeichnung:${task.TaskBezeichnung}Task Beschreibung:_!html${task.TaskBeschreibung}html!_Frühester Starttermin:${task.TaskFruehesterStarttermin}Task Abschluss bis:${task.TaskGeplanterAbschluss}[c365:${changeId}]</camunda:inputParameter>
+            <camunda:inputParameter name="CONTEXTOBJID"/>
+            <camunda:inputParameter name="serviceKey">COMM_SENDEMAIL</camunda:inputParameter>
+          </camunda:inputOutput>
+        </extensionElements>
+        <incoming>Flow_59afa1</incoming>
+        <ioSpecification id="IoSpecification_81b8b2">
+          <inputSet id="InputSet_81b8b2"/>
+          <outputSet id="OutputSet_81b8b2"/>
+        </ioSpecification>
+      </serviceTask>
+      <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetcommmsgbase::module_1_1-reports-reports_service::comm_sendmail_processrole" id="ServiceTask_db2ad6" name="Taskabschluss informieren">
+        <extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="COMM_SENDMAIL_PROCESSROLE_ROLEKEY">CHANGEMANAGER</camunda:inputParameter>
+            <camunda:inputParameter name="SUBJECT">Aufgabe ${task.TaskBezeichnung} für Change ${changeItemIdentifier} abgeschlossen</camunda:inputParameter>
+            <camunda:inputParameter name="DESCRIPTION">Die Aufgabe ${task.TaskBezeichnung} wurde abgeschlossen.</camunda:inputParameter>
+            <camunda:inputParameter name="serviceKey">COMM_SENDMAIL_PROCESSROLE</camunda:inputParameter>
+          </camunda:inputOutput>
+        </extensionElements>
+        <incoming>Flow_679042</incoming>
+        <outgoing>Flow_3873b2</outgoing>
+        <ioSpecification id="IoSpecification_db2ad6">
+          <inputSet id="InputSet_db2ad6"/>
+          <outputSet id="OutputSet_db2ad6"/>
+        </ioSpecification>
+      </serviceTask>
+      <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_processesappx::module_1_1-reports-reports_service::c365_processesappx_unresolvedtasks" id="ServiceTask_adbbd3" name="Offene Aufgaben des Typs">
+        <extensionElements>
+          <camunda:inputOutput>
+            <camunda:inputParameter name="C365_PROCESSESAPPX_UNRESOLVEDTASKS_PROCEXID">${PROEX_EXECUTIONSTORE_ID}</camunda:inputParameter>
+            <camunda:inputParameter name="serviceKey">C365_PROCESSESAPPX_UNRESOLVEDTASKS</camunda:inputParameter>
+          </camunda:inputOutput>
+        </extensionElements>
+        <outgoing>Flow_2e5634</outgoing>
+        <ioSpecification id="IoSpecification_adbbd3">
+          <inputSet id="InputSet_adbbd3"/>
+          <outputSet id="OutputSet_adbbd3"/>
+        </ioSpecification>
+      </serviceTask>
+      <parallelGateway id="Gateway_c05eca" name="">
+        <extensionElements/>
+        <incoming>Flow_2ee679</incoming>
+        <outgoing>Flow_234b30</outgoing>
+        <outgoing>Flow_44d387</outgoing>
+      </parallelGateway>
+      <exclusiveGateway default="Flow_2ee679" id="ExclusiveGateway_255882" name="Aufgabe bereits in Bearbeitung?">
+        <extensionElements/>
+        <incoming>Flow_faa02d</incoming>
+        <outgoing>Flow_3dc2e3</outgoing>
+        <outgoing>Flow_2ee679</outgoing>
+      </exclusiveGateway>
+      <sequenceFlow id="Flow_faa02d" sourceRef="StartEvent_22bc4a" targetRef="ExclusiveGateway_255882"/>
+      <sequenceFlow id="Flow_3dc2e3" sourceRef="ExclusiveGateway_255882" targetRef="EndEvent_92c0ec">
+        <conditionExpression id="conditionExpression_e72e53c3-6ed6-4c4f-8690-cf610b865fd1">${task.alreadyProcessed==true}</conditionExpression>
+      </sequenceFlow>
+      <sequenceFlow id="Flow_2ee679" sourceRef="ExclusiveGateway_255882" targetRef="Gateway_c05eca"/>
+      <sequenceFlow id="Flow_234b30" sourceRef="Gateway_c05eca" targetRef="TimerEvent_eebaac"/>
+      <sequenceFlow id="Flow_59afa1" sourceRef="TimerEvent_eebaac" targetRef="ServiceTask_81b8b2"/>
+      <sequenceFlow id="Flow_44d387" sourceRef="Gateway_c05eca" targetRef="UserTask_d8809d"/>
+      <sequenceFlow id="Flow_679042" sourceRef="UserTask_d8809d" targetRef="ServiceTask_db2ad6"/>
+      <sequenceFlow id="Flow_3873b2" sourceRef="ServiceTask_db2ad6" targetRef="EndEvent_5d7a53"/>
+      <sequenceFlow id="Flow_2e5634" sourceRef="ServiceTask_adbbd3" targetRef="UserTask_808e31"/>
+    </subProcess>
     <dataObject id="DataObject_d6a52b" isCollection="false" name="Erforderliche Maßnahmen">
       <extensionElements/>
     </dataObject>
@@ -70,7 +209,7 @@
     <startEvent id="StartEvent_2cd91b" name="Change abwickeln Start">
       <extensionElements>
         <camunda:formData>
-          <camunda:formField defaultValue="&lt;h4&gt;Change umsetzen&lt;/h4&gt;&lt;p&gt;Willkommen im Change-Management-Prozess &lt;/p&gt;" id="staticcontent_head" type="staticcontent">
+          <camunda:formField defaultValue="&lt;h4&gt;Change umsetzen&lt;/h4&gt;&lt;p&gt;Willkommen im Change-Management-Prozess &lt;/p&gt;" id="staticcontent_head" label="staticcontent_head" type="staticcontent">
             <camunda:properties>
               <camunda:property id="control" value="staticcontent"/>
             </camunda:properties>
@@ -113,50 +252,978 @@
             <camunda:properties>
               <camunda:property id="control" value="entity"/>
               <camunda:property id="entitiesFilter" value="module_3_1-services-service_priority"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
             </camunda:properties>
           </camunda:formField>
           <camunda:formField defaultValue="module_3_1-services-service_severity" id="severity" label="severity" type="entity">
             <camunda:properties>
               <camunda:property id="control" value="entity"/>
               <camunda:property id="entitiesFilter" value="module_3_1-services-service_severity"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
             </camunda:properties>
           </camunda:formField>
           <camunda:formField defaultValue="module_1_1-planning-planning_laboreffort" id="plannedEffortLabor" label="plannedEffortLabor" type="entity">
             <camunda:properties>
               <camunda:property id="control" value="entity"/>
               <camunda:property id="entitiesFilter" value="module_1_1-planning-planning_laboreffort"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
             </camunda:properties>
           </camunda:formField>
           <camunda:formField defaultValue="module_1_1-planning-planning_financeeffort" id="plannedEffortFinance" label="plannedEffortFinance" type="entity">
             <camunda:properties>
               <camunda:property id="control" value="entity"/>
               <camunda:property id="entitiesFilter" value="module_1_1-planning-planning_financeeffort"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
             </camunda:properties>
           </camunda:formField>
           <camunda:formField defaultValue="module_1_1-asset-asset_asset" id="forAsset" label="forAsset" type="entity">
             <camunda:properties>
               <camunda:property id="control" value="entity"/>
               <camunda:property id="entitiesFilter" value="module_1_1-asset-asset_asset"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
             </camunda:properties>
           </camunda:formField>
         </camunda:formData>
       </extensionElements>
+      <outgoing>Flow_fa4f0a</outgoing>
     </startEvent>
+    <endEvent id="TerminateEndEvent_702759" name="Abgelehnt">
+      <extensionElements/>
+      <incoming>Flow_89f640</incoming>
+      <terminateEventDefinition id="TerminateEventDefinition_702759"/>
+    </endEvent>
+    <intermediateCatchEvent id="TimerEvent_f39094" name="Verzögerung">
+      <extensionElements/>
+      <incoming>Flow_4637f8</incoming>
+      <timerEventDefinition id="TimerEventDefinition_f39094">
+        <timeDuration id="timeDuration_085b0ef8-cf10-4d84-ae27-cc90e20ea899">PT1S</timeDuration>
+      </timerEventDefinition>
+    </intermediateCatchEvent>
+    <endEvent id="TerminateEndEvent_a2156b" name="Ende">
+      <extensionElements/>
+      <incoming>Flow_fa6d1e</incoming>
+      <terminateEventDefinition id="TerminateEventDefinition_a2156b"/>
+    </endEvent>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_7c3617" name="Change klassifizieren">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="processUsertaskTypesRef" value="{&#34;cockpitId&#34;:&#34;ebc0f9b4-998b-47dc-bf86-43390295febd&#34;,&#34;contextIdentifier&#34;:&#34;MONITORING_ROLE&#34;,&#34;contextKey&#34;:&#34;C365_PROCESSESAPPX&#34;}" />
+          <camunda:property name="processProgressPhaseInternalRef" value="{&#34;cockpitId&#34;:&#34;4245f550-645f-48b3-af5b-5e0362793666&#34;,&#34;contextIdentifier&#34;:&#34;CATEGORIZE&#34;,&#34;contextKey&#34;:&#34;C365_SERVICEMGMT_PROCESSES&#34;}" />
+          <camunda:property name="processProgressPhaseRef" value="{&#34;cockpitId&#34;:&#34;4245f550-645f-48b3-af5b-5e0362793666&#34;,&#34;contextIdentifier&#34;:&#34;CATEGORIZE&#34;,&#34;contextKey&#34;:&#34;C365_SERVICEMGMT_PROCESSES&#34;}" />
+          <camunda:property name="candidateRolesRef" value="{&#34;cockpitId&#34;:&#34;886e7dba-7946-4743-90fc-2591dbd6f8e8&#34;,&#34;contextIdentifier&#34;:&#34;CHANGEMANAGER&#34;,&#34;contextKey&#34;:&#34;C365_SERVICEMANAGEMENT&#34;}" />
+          <camunda:property name="onCreate" value="$servicemgmt.addTaskTo('module_3_1-services-service_rfc', &quot;${changeId}&quot;, $currentTask)$procex.updateMonitoringTaskTo('module_3_1-services-service_rfc', &quot;${changeId}&quot;, $currentTask)"/>
+          <camunda:property name="onInit" value="$taskForm.setObjectInstance(&quot;${changeId}&quot;)"/>
+        </camunda:properties>
+        <camunda:formData>
+          <camunda:formField defaultValue="&amp;#60;h4&amp;#62;Change ${changeItemIdentifier} ${ChangeBezeichnung}&amp;#38;nbsp;klassifizieren&amp;#60;/h4&amp;#62;" id="staticcontent_head" label="staticcontent_head" type="staticcontent">
+            <camunda:properties>
+              <camunda:property id="control" value="staticcontent"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBezeichnung" label="ChangeBezeichnung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBeschreibung" label="ChangeBeschreibung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="FrhesterStarttermin" label="FrhesterStarttermin" type="date">
+            <camunda:properties>
+              <camunda:property id="control" value="date"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="GeplanterAbschluss" label="GeplanterAbschluss" type="date">
+            <camunda:properties>
+              <camunda:property id="control" value="date"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ChangeType" label="ChangeType" type="enum">
+            <camunda:properties>
+              <camunda:property id="control" value="enum"/>
+              <camunda:property id="itemIdentifier" value="ChangeType"/>
+            </camunda:properties>
+            <camunda:value id="N" name="Normal change"/>
+            <camunda:value id="S" name="Standard Change"/>
+            <camunda:value id="A" name="Notfall Change"/>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="changeAbgelehnt" label="changeAbgelehnt" type="boolean">
+            <camunda:properties>
+              <camunda:property id="control" value="boolean"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ChangeUmsetzungPruefenDurch" label="ChangeUmsetzungPruefenDurch" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-organization-organization_assignment"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_3_1-services-service_priority" id="priority" label="priority" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_3_1-services-service_priority"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_3_1-services-service_severity" id="severity" label="severity" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_3_1-services-service_severity"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-planning-planning_laboreffort" id="plannedEffortLabor" label="plannedEffortLabor" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-planning-planning_laboreffort"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-planning-planning_financeeffort" id="plannedEffortFinance" label="plannedEffortFinance" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-planning-planning_financeeffort"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-asset-asset_asset" id="forAsset" label="forAsset" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-asset-asset_asset"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <incoming>Flow_6e4996</incoming>
+      <outgoing>Flow_c3dc1f</outgoing>
+      <outgoing>Flow_0d3b3f</outgoing>
+      <ioSpecification id="IoSpecification_7c3617">
+        <inputSet id="InputSet_7c3617"/>
+        <outputSet id="OutputSet_7c3617"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_03ced1" name="Risikoanalyse durchführen">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="onCreate" value="$servicemgmt.addTaskTo(&amp;#39;module_3_1-services-service_rfc&amp;#39;, &amp;#34;${changeId}&amp;#34;, $currentTask)&amp;#10;$procex.updateMonitoringTaskTo(&amp;#39;module_3_1-services-service_rfc&amp;#39;, &amp;#34;${changeId}&amp;#34;, $currentTask)&amp;#10;"/>
+          <camunda:property name="onInit" value="$taskForm.setObjectInstance(&amp;#34;${changeId}&amp;#34;)"/>
+        </camunda:properties>
+        <camunda:formData>
+          <camunda:formField defaultValue="&amp;#60;h4&amp;#62;Risikoanalyse für &amp;#38;nbsp;${changeItemIdentifier} ${ChangeBezeichnung} durchführen&amp;#60;/h4&amp;#62;" id="staticcontent_risiko" label="staticcontent_risiko" type="staticcontent">
+            <camunda:properties>
+              <camunda:property id="control" value="staticcontent"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBezeichnung" label="ChangeBezeichnung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBeschreibung" label="ChangeBeschreibung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="changeAbgelehnt" label="changeAbgelehnt" type="boolean">
+            <camunda:properties>
+              <camunda:property id="control" value="boolean"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="FrhesterStarttermin" label="FrhesterStarttermin" type="date">
+            <camunda:properties>
+              <camunda:property id="control" value="date"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="GeplanterAbschluss" label="GeplanterAbschluss" type="date">
+            <camunda:properties>
+              <camunda:property id="control" value="date"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ChangeType" label="ChangeType" type="enum">
+            <camunda:properties>
+              <camunda:property id="control" value="enum"/>
+              <camunda:property id="itemIdentifier" value="ChangeType"/>
+            </camunda:properties>
+            <camunda:value id="N" name="Normal change"/>
+            <camunda:value id="S" name="Standard Change"/>
+            <camunda:value id="A" name="Notfall Change"/>
+          </camunda:formField>
+          <camunda:formField id="ChangeUmsetzungPruefenDurch" label="ChangeUmsetzungPruefenDurch" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-organization-organization_assignment"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_3_1-services-service_priority" id="priority" label="priority" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_3_1-services-service_priority"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_3_1-services-service_severity" id="severity" label="severity" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_3_1-services-service_severity"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-planning-planning_laboreffort" id="plannedEffortLabor" label="plannedEffortLabor" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-planning-planning_laboreffort"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-planning-planning_financeeffort" id="plannedEffortFinance" label="plannedEffortFinance" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-planning-planning_financeeffort"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="module_1_1-asset-asset_asset" id="forAsset" label="forAsset" type="entity">
+            <camunda:properties>
+              <camunda:property id="control" value="entity"/>
+              <camunda:property id="entitiesFilter" value="module_1_1-asset-asset_asset"/>
+              <camunda:property id="reuseRow" value="true"/>
+              <camunda:property id="newrow" value="false"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="Manahmenerforderlich" label="Manahmenerforderlich" type="boolean">
+            <camunda:properties>
+              <camunda:property id="triggerFormUpdate" value="true"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ErforderlichMassnahmen" label="ErforderlichMassnahmen" type="subform">
+            <camunda:properties>
+              <camunda:property id="control" value="subform"/>
+              <camunda:property id="subformRefId" value="DataObjectReference_d6a52b"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <incoming>Flow_603096</incoming>
+      <outgoing>Flow_e34449</outgoing>
+      <ioSpecification id="IoSpecification_03ced1">
+        <inputSet id="InputSet_03ced1"/>
+        <outputSet id="OutputSet_03ced1"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_869378" name="Change vorbereiten">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="onCreate" value="$servicemgmt.addTaskTo(&amp;#39;module_3_1-services-service_rfc&amp;#39;, &amp;#34;${changeId}&amp;#34;, $currentTask)&amp;#10;$procex.updateMonitoringTaskTo(&amp;#39;module_3_1-services-service_rfc&amp;#39;, &amp;#34;${changeId}&amp;#34;, $currentTask)&amp;#10;"/>
+          <camunda:property name="onInit" value="$taskForm.setObjectInstance(&amp;#34;${changeId}&amp;#34;)"/>
+        </camunda:properties>
+        <camunda:formData>
+          <camunda:formField defaultValue="&amp;#60;h4&amp;#62;Change&amp;#38;nbsp;${changeItemIdentifier} ${ChangeBezeichnung}&amp;#38;nbsp;vorbereiten&amp;#60;/h4&amp;#62;" id="changevorbereiten" label="changevorbereiten" type="staticcontent">
+            <camunda:properties>
+              <camunda:property id="control" value="staticcontent"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ChangeUmsetzungPruefenDurch" label="ChangeUmsetzungPruefenDurch" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-organization-organization_assignment"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="tasks" label="tasks" type="subform">
+            <camunda:properties>
+              <camunda:property id="control" value="subform"/>
+              <camunda:property id="subformRefId" value="DataObjectReference_edcee1"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBezeichnung" label="ChangeBezeichnung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBeschreibung" label="ChangeBeschreibung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="FrhesterStarttermin" label="FrhesterStarttermin" type="date">
+            <camunda:properties>
+              <camunda:property id="control" value="date"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="GeplanterAbschluss" label="GeplanterAbschluss" type="date">
+            <camunda:properties>
+              <camunda:property id="control" value="date"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ChangeType" label="ChangeType" type="enum">
+            <camunda:properties>
+              <camunda:property id="control" value="enum"/>
+              <camunda:property id="itemIdentifier" value="ChangeType"/>
+            </camunda:properties>
+            <camunda:value id="N" name="Normal change"/>
+            <camunda:value id="S" name="Standard Change"/>
+            <camunda:value id="A" name="Notfall Change"/>
+          </camunda:formField>
+          <camunda:formField defaultValue="false" id="Manahmenerforderlich" label="Manahmenerforderlich" type="boolean">
+            <camunda:properties>
+              <camunda:property id="control" value="boolean"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ErforderlichMassnahmen" label="ErforderlichMassnahmen" type="subform">
+            <camunda:properties>
+              <camunda:property id="control" value="subform"/>
+              <camunda:property id="subformRefId" value="DataObjectReference_d6a52b"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <incoming>Flow_7fd8f2</incoming>
+      <outgoing>Flow_2c7b4f</outgoing>
+      <outgoing>Flow_9c256e</outgoing>
+      <ioSpecification id="IoSpecification_869378">
+        <inputSet id="InputSet_869378"/>
+        <outputSet id="OutputSet_869378"/>
+      </ioSpecification>
+    </userTask>
+    <userTask camunda:modelerTemplate="cockpit365.task_task.DefaultUserTask" id="UserTask_808e31" name="Change Umsetzung prüfen">
+      <extensionElements>
+        <camunda:properties>
+          <camunda:property name="onCreate" value="$servicemgmt.addTaskTo(&amp;#39;module_3_1-services-service_rfc&amp;#39;, &amp;#34;${changeId}&amp;#34;, $currentTask)&amp;#10;$procex.updateMonitoringTaskTo(&amp;#39;module_3_1-services-service_rfc&amp;#39;, &amp;#34;${changeId}&amp;#34;, $currentTask)"/>
+          <camunda:property name="onInit" value="$taskForm.setObjectInstance(&amp;#34;${changeId}&amp;#34;)"/>
+        </camunda:properties>
+        <camunda:formData>
+          <camunda:formField defaultValue="&amp;#60;h4&amp;#62;Change &amp;#38;nbsp;${changeItemIdentifier} ${ChangeBezeichnung} Umsetzung prüfen&amp;#60;/h4&amp;#62;" id="staticumsetzung" label="staticumsetzung" type="staticcontent">
+            <camunda:properties>
+              <camunda:property id="control" value="staticcontent"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="ChangeUmsetzungPruefenDurch" label="ChangeUmsetzungPruefenDurch" type="object">
+            <camunda:properties>
+              <camunda:property id="entitiesFilter" value="module_1_1-organization-organization_assignment"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangePruefbericht" label="ChangePruefbericht" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBezeichnung" label="ChangeBezeichnung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="string"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangeBeschreibung" label="ChangeBeschreibung" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField id="tasks" label="tasks" type="subform">
+            <camunda:properties>
+              <camunda:property id="control" value="subform"/>
+              <camunda:property id="subformRefId" value="DataObjectReference_edcee1"/>
+            </camunda:properties>
+          </camunda:formField>
+          <camunda:formField defaultValue="" id="ChangePruefbericht" label="ChangePruefbericht" type="string">
+            <camunda:properties>
+              <camunda:property id="control" value="richtext"/>
+            </camunda:properties>
+          </camunda:formField>
+        </camunda:formData>
+      </extensionElements>
+      <incoming>Flow_2e5634</incoming>
+      <outgoing>Flow_7cc04a</outgoing>
+      <ioSpecification id="IoSpecification_808e31">
+        <inputSet id="InputSet_808e31"/>
+        <outputSet id="OutputSet_808e31"/>
+      </ioSpecification>
+    </userTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetchatbase::module_1_1-reports-reports_service::c365_snippetchatbase_postmsgtochannel" id="ServiceTask_9fb2c6" name="News Eintrag in Channel">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="CHATMESSAGEFROMROLEID">${processOwnerAssignmentId}</camunda:inputParameter>
+          <camunda:inputParameter name="CHATMESSAGETITLE">Change ${changeItemIdentifier} erstellt</camunda:inputParameter>
+          <camunda:inputParameter name="CHATMESSAGE">${ChangeBezeichnung}</camunda:inputParameter>
+          <camunda:inputParameter name="CHATMESSAGEFROMCONTRID"/>
+          <camunda:inputParameter name="CHATMESSAGETOROLEID"/>
+          <camunda:inputParameter name="CHATCHANNEL">EVENTS</camunda:inputParameter>
+          <camunda:inputParameter name="RELATEDOBJECTS">module_3_1-services-service_rfc::${changeId}</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">C365_SNIPPETCHATBASE_POSTMSGTOCHANNEL</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_5325e4</incoming>
+      <outgoing>Flow_f07a69</outgoing>
+      <ioSpecification id="IoSpecification_9fb2c6">
+        <inputSet id="InputSet_9fb2c6"/>
+        <outputSet id="OutputSet_9fb2c6"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_base_links::module_1_1-reports-reports_service::links_createlink" id="ServiceTask_d53270" name="Link zwischen Objekten herstellen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="LINKS_OBJID1">module_3_1-services-service_rfc::${changeId}</camunda:inputParameter>
+          <camunda:inputParameter name="LINKS_LINKTYPE">RELATED</camunda:inputParameter>
+          <camunda:inputParameter name="LINKS_CREATELINK-title"/>
+          <camunda:inputParameter name="LINKS_OBJID2">${forAsset}</camunda:inputParameter>
+          <camunda:inputParameter name="REFS_INOBJ1">${forAsset}</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">LINKS_CREATELINK</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_20f0fb</incoming>
+      <incoming>Flow_c3dc1f</incoming>
+      <ioSpecification id="IoSpecification_d53270">
+        <inputSet id="InputSet_d53270"/>
+        <outputSet id="OutputSet_d53270"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetcommmsgbase::module_1_1-reports-reports_service::comm_sendmail_processrole" id="ServiceTask_63f496" name="Genehmigung benachrichtigen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="COMM_SENDMAIL_PROCESSROLE_ROLEKEY">CHANGEMANAGER</camunda:inputParameter>
+          <camunda:inputParameter name="SUBJECT">Change ${changeItemIdentifier}: ${ChangeBezeichnung} wurde genehmigt</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">Der Change ${changeItemIdentifier}: ${ChangeBezeichnung} wurde soeben genehmigt. Change Beschreibung: ${ChangeBeschreibung_markup} Mit freundlichen Grüßen [c365:${changeId}]</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">COMM_SENDMAIL_PROCESSROLE</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_59cede</incoming>
+      <outgoing>Flow_7c4a65</outgoing>
+      <ioSpecification id="IoSpecification_63f496">
+        <inputSet id="InputSet_63f496"/>
+        <outputSet id="OutputSet_63f496"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetcommmsgbase::module_1_1-reports-reports_service::comm_sendmail_processrole" id="ServiceTask_7d1a9f" name="Change Abbruch/Ablehnung informieren">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="COMM_SENDMAIL_PROCESSROLE_ROLEKEY">CHANGEMANAGER</camunda:inputParameter>
+          <camunda:inputParameter name="SUBJECT">Abbruch Change ${ChangeBezeichnung}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">Der Change ${changeItemIdentifier}: ${ChangeBezeichnung} wurde abgelehnt.</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">COMM_SENDMAIL_PROCESSROLE</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_93f28e</incoming>
+      <incoming>Flow_573c06</incoming>
+      <outgoing>Flow_c25ecf</outgoing>
+      <ioSpecification id="IoSpecification_7d1a9f">
+        <inputSet id="InputSet_7d1a9f"/>
+        <outputSet id="OutputSet_7d1a9f"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetstatusmgmt::module_1_1-reports-reports_service::status_updatestatuswithdatablock" id="ServiceTask_8ac7de" name="Change auf Verworfen setzen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="CLAZZ">module_3_1-services-service_rfc</camunda:inputParameter>
+          <camunda:inputParameter name="COCKPITID">${changeId}</camunda:inputParameter>
+          <camunda:inputParameter name="SUMMARY">${ChangeBezeichnung}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">${ChangeBeschreibung}</camunda:inputParameter>
+          <camunda:inputParameter name="STATEGROUP">DEFERRED</camunda:inputParameter>
+          <camunda:inputParameter name="STATE"/>
+          <camunda:inputParameter name="STATUS_UPDATESTATUSWITHDATABLOCK_OBJDATAMAP">{    "subjectMLString_de": "${ChangeBezeichnung}",    "startdateplan" : "${FrhesterStarttermin}",    "enddateplan" : "${GeplanterAbschluss}",    "severityRef" : "${severity}",    "prioRef" : "${priority}",    "plannedEffortLaborRef" : "${plannedEffortLabor}",    "plannedEffortFinancialRef" : "${plannedEffortFinance}"}</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">STATUS_UPDATESTATUSWITHDATABLOCK</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_c25ecf</incoming>
+      <outgoing>Flow_89f640</outgoing>
+      <ioSpecification id="IoSpecification_8ac7de">
+        <inputSet id="InputSet_8ac7de"/>
+        <outputSet id="OutputSet_8ac7de"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetstatusmgmt::module_1_1-reports-reports_service::status_updatestatuswithdatablock" id="ServiceTask_b25430" name="Change auf Open setzen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="CLAZZ">module_3_1-services-service_rfc</camunda:inputParameter>
+          <camunda:inputParameter name="COCKPITID">${changeId}</camunda:inputParameter>
+          <camunda:inputParameter name="SUMMARY">${ChangeBezeichnung}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">${ChangeBeschreibung}</camunda:inputParameter>
+          <camunda:inputParameter name="STATEGROUP">OPEN</camunda:inputParameter>
+          <camunda:inputParameter name="STATE"/>
+          <camunda:inputParameter name="STATUS_UPDATESTATUSWITHDATABLOCK_OBJDATAMAP">{    "subjectMLString_de": "${ChangeBezeichnung}",    "startdateplan" : "${FrhesterStarttermin}",    "enddateplan" : "${GeplanterAbschluss}",    "severityRef" : "${severity}",    "prioRef" : "${priority}",    "plannedEffortLaborRef" : "${plannedEffortLabor}",    "plannedEffortFinancialRef" : "${plannedEffortFinance}"}</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">STATUS_UPDATESTATUSWITHDATABLOCK</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_7c4a65</incoming>
+      <outgoing>Flow_65667a</outgoing>
+      <ioSpecification id="IoSpecification_b25430">
+        <inputSet id="InputSet_b25430"/>
+        <outputSet id="OutputSet_b25430"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_servicemanagement::module_1_1-reports-reports_service::services_createchangeblock" id="ServiceTask_692140" name="Change Ticket erstellen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="SERVICES_CREATECHANGEBLOCK_CHANGETYPE">${ChangeType}</camunda:inputParameter>
+          <camunda:inputParameter name="SUMMARY">${ChangeBezeichnung}</camunda:inputParameter>
+          <camunda:inputParameter name="SERVICES_CREATECHANGEBLOCK_STARTDATEPLAN">${FrhesterStarttermin}</camunda:inputParameter>
+          <camunda:inputParameter name="SERVICES_CREATECHANGEBLOCK_STARTDATEIS"/>
+          <camunda:inputParameter name="SERVICES_CREATECHANGEBLOCK_ENDDATEPLAN">${GeplanterAbschluss}</camunda:inputParameter>
+          <camunda:inputParameter name="SERVICES_CREATECHANGEBLOCK_ENDDATEIS"/>
+          <camunda:inputParameter name="DESCRIPTION">${ChangeBeschreibung}</camunda:inputParameter>
+          <camunda:inputParameter name="VARPREFIX"/>
+          <camunda:inputParameter name="SERVICES_CREATECHANGEBLOCK_FROMFINDING"/>
+          <camunda:inputParameter name="serviceKey">SERVICES_CREATECHANGEBLOCK</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_fa4f0a</incoming>
+      <outgoing>Flow_5325e4</outgoing>
+      <ioSpecification id="IoSpecification_692140">
+        <inputSet id="InputSet_692140"/>
+        <outputSet id="OutputSet_692140"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_base_links::module_1_1-reports-reports_service::links_createlink" id="ServiceTask_ace9a1" name="Link zwischen Objekten herstellen (copy)">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="LINKS_OBJID1">module_3_1-services-service_rfc::${changeId}</camunda:inputParameter>
+          <camunda:inputParameter name="LINKS_LINKTYPE">RELATED</camunda:inputParameter>
+          <camunda:inputParameter name="LINKS_CREATELINK-title"/>
+          <camunda:inputParameter name="LINKS_OBJID2">${forAsset}</camunda:inputParameter>
+          <camunda:inputParameter name="REFS_INOBJ1">${forAsset}</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">LINKS_CREATELINK</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_2c7b4f</incoming>
+      <ioSpecification id="IoSpecification_ace9a1">
+        <inputSet id="InputSet_ace9a1"/>
+        <outputSet id="OutputSet_ace9a1"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetstatusmgmt::module_1_1-reports-reports_service::status_updatestatuswithdatablock" id="ServiceTask_1ae934" name="Change auf In Bearbeitung setzen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="CLAZZ">module_3_1-services-service_rfc</camunda:inputParameter>
+          <camunda:inputParameter name="COCKPITID">${changeId}</camunda:inputParameter>
+          <camunda:inputParameter name="SUMMARY">${ChangeBezeichnung}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">${ChangeBeschreibung}</camunda:inputParameter>
+          <camunda:inputParameter name="STATEGROUP">INPROGRESS</camunda:inputParameter>
+          <camunda:inputParameter name="STATE"/>
+          <camunda:inputParameter name="STATUS_UPDATESTATUSWITHDATABLOCK_OBJDATAMAP">{    "subjectMLString_de": "${ChangeBezeichnung}",    "startdateplan" : "${FrhesterStarttermin}",    "enddateplan" : "${GeplanterAbschluss}",    "severityRef" : "${severity}",    "prioRef" : "${priority}",    "plannedEffortLaborRef" : "${plannedEffortLabor}",    "plannedEffortFinancialRef" : "${plannedEffortFinance}"}</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">STATUS_UPDATESTATUSWITHDATABLOCK</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_9c256e</incoming>
+      <outgoing>Flow_4637f8</outgoing>
+      <ioSpecification id="IoSpecification_1ae934">
+        <inputSet id="InputSet_1ae934"/>
+        <outputSet id="OutputSet_1ae934"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_processesappx::module_1_1-reports-reports_service::c365_processesappx_processstartgeneric" id="ServiceTask_c5bf9b" name="Folgechange für Notfallchange erstellen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="C365_PROCESSESAPPX_PROCESSSTARTGENERIC_PROCESSKEY">CHANGETEMPLATE</camunda:inputParameter>
+          <camunda:inputParameter name="C365_PROCESSESAPPX_PROCESSSTARTGENERIC_PROCESSVARS">{   "ChangeBezeichnung" : "${ChangeBezeichnung} EM ${changeItemIdentifier}",   "ChangeBeschreibung" : "Beschreibung: ${ChangeBeschreibung} Prüfbericht: ${ChangePruefbericht}",   "fromChange" : "${changeId}"}</camunda:inputParameter>
+          <camunda:inputParameter name="VARPREFIX"/>
+          <camunda:inputParameter name="serviceKey">C365_PROCESSESAPPX_PROCESSSTARTGENERIC</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_8a3845</incoming>
+      <outgoing>Flow_64e003</outgoing>
+      <ioSpecification id="IoSpecification_c5bf9b">
+        <inputSet id="InputSet_c5bf9b"/>
+        <outputSet id="OutputSet_c5bf9b"/>
+      </ioSpecification>
+    </serviceTask>
+    <serviceTask camunda:delegateExpression="#{cockpit}" camunda:modelerTemplate="c365_snippetstatusmgmt::module_1_1-reports-reports_service::status_updatestatuswithdatablock" id="ServiceTask_383c16" name="Change auf Abgeschlossen setzen">
+      <extensionElements>
+        <camunda:inputOutput>
+          <camunda:inputParameter name="CLAZZ">module_3_1-services-service_rfc</camunda:inputParameter>
+          <camunda:inputParameter name="COCKPITID">${changeId}</camunda:inputParameter>
+          <camunda:inputParameter name="SUMMARY">${ChangeBezeichnung}</camunda:inputParameter>
+          <camunda:inputParameter name="DESCRIPTION">${ChangeBeschreibung}</camunda:inputParameter>
+          <camunda:inputParameter name="STATEGROUP">COMPLETED</camunda:inputParameter>
+          <camunda:inputParameter name="STATE"/>
+          <camunda:inputParameter name="STATUS_UPDATESTATUSWITHDATABLOCK_OBJDATAMAP">{    "subjectMLString_de": "${ChangeBezeichnung}",    "startdateplan" : "${FrhesterStarttermin}",    "enddateplan" : "${GeplanterAbschluss}",    "severityRef" : "${severity}",    "prioRef" : "${priority}",    "plannedEffortLaborRef" : "${plannedEffortLabor}",    "plannedEffortFinancialRef" : "${plannedEffortFinance}"}</camunda:inputParameter>
+          <camunda:inputParameter name="serviceKey">STATUS_UPDATESTATUSWITHDATABLOCK</camunda:inputParameter>
+        </camunda:inputOutput>
+      </extensionElements>
+      <incoming>Flow_0a9204</incoming>
+      <outgoing>Flow_fa6d1e</outgoing>
+      <ioSpecification id="IoSpecification_383c16">
+        <inputSet id="InputSet_383c16"/>
+        <outputSet id="OutputSet_383c16"/>
+      </ioSpecification>
+    </serviceTask>
+    <parallelGateway id="Gateway_1a47a1" name="">
+      <extensionElements/>
+      <incoming>Flow_f07a69</incoming>
+      <outgoing>Flow_6e4996</outgoing>
+      <outgoing>Flow_20f0fb</outgoing>
+    </parallelGateway>
+    <parallelGateway id="Gateway_f6259c" name="">
+      <extensionElements/>
+      <incoming>Flow_fa3453</incoming>
+      <outgoing>Flow_b6f12d</outgoing>
+    </parallelGateway>
+    <exclusiveGateway default="Flow_59cede" id="ExclusiveGateway_075e20" name="Change abgelehnt?">
+      <extensionElements/>
+      <incoming>Flow_0d3b3f</incoming>
+      <outgoing>Flow_59cede</outgoing>
+      <outgoing>Flow_93f28e</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway default="Flow_fa3453" id="ExclusiveGateway_09945c" name="Change Typ">
+      <extensionElements/>
+      <incoming>Flow_65667a</incoming>
+      <outgoing>Flow_603096</outgoing>
+      <outgoing>Flow_fa3453</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway default="Flow_4a1f9f" id="ExclusiveGateway_d34281" name="Risiko nicht beherrschbar?">
+      <extensionElements/>
+      <incoming>Flow_e34449</incoming>
+      <outgoing>Flow_573c06</outgoing>
+      <outgoing>Flow_4a1f9f</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="ExclusiveGateway_a32fc2" name="Junction">
+      <extensionElements/>
+      <incoming>Flow_4a1f9f</incoming>
+      <incoming>Flow_b6f12d</incoming>
+      <outgoing>Flow_7fd8f2</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway default="Flow_45ae51" id="ExclusiveGateway_fc57af" name="Ist Notfall Change?">
+      <extensionElements/>
+      <incoming>Flow_7cc04a</incoming>
+      <outgoing>Flow_45ae51</outgoing>
+      <outgoing>Flow_8a3845</outgoing>
+    </exclusiveGateway>
+    <exclusiveGateway id="ExclusiveGateway_059168" name="">
+      <extensionElements/>
+      <incoming>Flow_45ae51</incoming>
+      <incoming>Flow_64e003</incoming>
+      <outgoing>Flow_0a9204</outgoing>
+    </exclusiveGateway>
+    <sequenceFlow id="Flow_6e4996" sourceRef="Gateway_1a47a1" targetRef="UserTask_7c3617"/>
+    <sequenceFlow id="Flow_20f0fb" sourceRef="Gateway_1a47a1" targetRef="ServiceTask_d53270"/>
+    <sequenceFlow id="Flow_c3dc1f" sourceRef="UserTask_7c3617" targetRef="ServiceTask_d53270"/>
+    <sequenceFlow id="Flow_0d3b3f" sourceRef="UserTask_7c3617" targetRef="ExclusiveGateway_075e20"/>
+    <sequenceFlow id="Flow_59cede" sourceRef="ExclusiveGateway_075e20" targetRef="ServiceTask_63f496"/>
+    <sequenceFlow id="Flow_93f28e" sourceRef="ExclusiveGateway_075e20" targetRef="ServiceTask_7d1a9f">
+      <conditionExpression id="conditionExpression_fe5840af-1eca-4357-b50b-c7147529a9dc">${execution.getVariable('changeAbgelehnt')}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_c25ecf" sourceRef="ServiceTask_7d1a9f" targetRef="ServiceTask_8ac7de"/>
+    <sequenceFlow id="Flow_89f640" sourceRef="ServiceTask_8ac7de" targetRef="TerminateEndEvent_702759"/>
+    <sequenceFlow id="Flow_7c4a65" sourceRef="ServiceTask_63f496" targetRef="ServiceTask_b25430"/>
+    <sequenceFlow id="Flow_65667a" sourceRef="ServiceTask_b25430" targetRef="ExclusiveGateway_09945c"/>
+    <sequenceFlow id="Flow_603096" sourceRef="ExclusiveGateway_09945c" targetRef="UserTask_03ced1">
+      <conditionExpression id="conditionExpression_77953171-4538-4e78-ba79-0f1ce17c301b">${ChangeType.equals('N')}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_e34449" sourceRef="UserTask_03ced1" targetRef="ExclusiveGateway_d34281"/>
+    <sequenceFlow id="Flow_573c06" sourceRef="ExclusiveGateway_d34281" targetRef="ServiceTask_7d1a9f">
+      <conditionExpression id="conditionExpression_2da972fa-ec8e-41a0-b99a-77af95539026">${execution.getVariable('changeAbgelehnt')}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_4a1f9f" sourceRef="ExclusiveGateway_d34281" targetRef="ExclusiveGateway_a32fc2"/>
+    <sequenceFlow id="Flow_fa3453" sourceRef="ExclusiveGateway_09945c" targetRef="Gateway_f6259c"/>
+    <sequenceFlow id="Flow_b6f12d" sourceRef="Gateway_f6259c" targetRef="ExclusiveGateway_a32fc2"/>
+    <sequenceFlow id="Flow_7fd8f2" sourceRef="ExclusiveGateway_a32fc2" targetRef="UserTask_869378"/>
+    <sequenceFlow id="Flow_2c7b4f" sourceRef="UserTask_869378" targetRef="ServiceTask_ace9a1"/>
+    <sequenceFlow id="Flow_9c256e" sourceRef="UserTask_869378" targetRef="ServiceTask_1ae934"/>
+    <sequenceFlow id="Flow_4637f8" sourceRef="ServiceTask_1ae934" targetRef="TimerEvent_f39094"/>
+    <sequenceFlow id="Flow_7cc04a" sourceRef="UserTask_808e31" targetRef="ExclusiveGateway_fc57af"/>
+    <sequenceFlow id="Flow_45ae51" sourceRef="ExclusiveGateway_fc57af" targetRef="ExclusiveGateway_059168"/>
+    <sequenceFlow id="Flow_8a3845" sourceRef="ExclusiveGateway_fc57af" targetRef="ServiceTask_c5bf9b">
+      <conditionExpression id="conditionExpression_436d9a5c-2539-40e8-89b2-c37a48763972">${ChangeType.equals('A')}</conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_64e003" sourceRef="ServiceTask_c5bf9b" targetRef="ExclusiveGateway_059168"/>
+    <sequenceFlow id="Flow_0a9204" sourceRef="ExclusiveGateway_059168" targetRef="ServiceTask_383c16"/>
+    <sequenceFlow id="Flow_fa6d1e" sourceRef="ServiceTask_383c16" targetRef="TerminateEndEvent_a2156b"/>
+    <sequenceFlow id="Flow_fa4f0a" sourceRef="StartEvent_2cd91b" targetRef="ServiceTask_692140"/>
+    <sequenceFlow id="Flow_5325e4" sourceRef="ServiceTask_692140" targetRef="ServiceTask_9fb2c6">
+      <extensionElements>
+        <camunda:executionListener event="take">
+          <camunda:script scriptFormat="javascript">execution.setVariable("instanceName", changeItemIdentifier);execution.setVariable('startedWithObjId', changeId);</camunda:script>
+        </camunda:executionListener>
+      </extensionElements>
+    </sequenceFlow>
+    <sequenceFlow id="Flow_f07a69" sourceRef="ServiceTask_9fb2c6" targetRef="Gateway_1a47a1"/>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_dd3bff">
     <bpmndi:BPMNPlane bpmnElement="Collaboration_dd3bff" id="Plane_dd3bff">
-      <bpmndi:BPMNShape bpmnElement="Participant_7420b6" id="BPMNShape_ab99be79-5654-46cf-825a-7bc4ab14569b" isHorizontal="true">
-        <dc:Bounds height="405.0" width="835.0" x="210.0" y="184.0"/>
+      <bpmndi:BPMNShape bpmnElement="Participant_7420b6" id="BPMNShape_c2c74bfb-0a64-40e9-9020-19fe960eba17" isHorizontal="true">
+        <dc:Bounds height="517.0" width="3639.0" x="0.0" y="180.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="SUBPROCESS_993925" id="Subprocess_993925_di" isExpanded="true">
+        <dc:Bounds height="229.0" width="1008.0" x="1812.0" y="456.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="DataObjectReference_d6a52b" id="DataObjectReference_d6a52b_di" isExpanded="true">
-        <dc:Bounds height="55.0" width="120.0" x="246.0" y="220.0"/>
+        <dc:Bounds height="55.0" width="96.0" x="72.0" y="216.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="DataObjectReference_edcee1" id="DataObjectReference_edcee1_di" isExpanded="true">
-        <dc:Bounds height="55.0" width="120.0" x="402.0" y="220.0"/>
+        <dc:Bounds height="55.0" width="84.0" x="192.0" y="216.0"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="StartEvent_2cd91b" id="StartEvent_2cd91b_di" isExpanded="true">
-        <dc:Bounds height="36.0" width="36.0" x="246.0" y="376.0"/>
+        <dc:Bounds height="36.0" width="36.0" x="96.0" y="372.0"/>
       </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TerminateEndEvent_702759" id="TerminateEndEvent_702759_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="1296.0" y="580.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TimerEvent_f39094" id="TimerEvent_f39094_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="2124.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="StartEvent_22bc4a" id="StartEvent_22bc4a_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="1860.0" y="528.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_92c0ec" id="EndEvent_92c0ec_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="2000.0" y="588.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TimerEvent_eebaac" id="TimerEvent_eebaac_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="2160.0" y="612.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="EndEvent_5d7a53" id="EndEvent_5d7a53_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="2652.0" y="510.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="TerminateEndEvent_a2156b" id="TerminateEndEvent_a2156b_di" isExpanded="true">
+        <dc:Bounds height="36.0" width="36.0" x="3432.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_7c3617" id="UserTask_7c3617_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="768.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_03ced1" id="UserTask_03ced1_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="1512.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_869378" id="UserTask_869378_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="1812.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_d8809d" id="UserTask_d8809d_di" isExpanded="true">
+        <dc:Bounds height="68.0" width="216.0" x="2232.0" y="504.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="UserTask_808e31" id="UserTask_808e31_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="2868.0" y="360.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_9fb2c6" id="ServiceTask_9fb2c6_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="540.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_d53270" id="ServiceTask_d53270_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="768.0" y="456.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_63f496" id="ServiceTask_63f496_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="1032.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_7d1a9f" id="ServiceTask_7d1a9f_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="989.0" y="580.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_8ac7de" id="ServiceTask_8ac7de_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="1140.0" y="580.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_b25430" id="ServiceTask_b25430_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="1200.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_692140" id="ServiceTask_692140_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="264.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_ace9a1" id="ServiceTask_ace9a1_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="1812.0" y="288.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_1ae934" id="ServiceTask_1ae934_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="1968.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_81b8b2" id="ServiceTask_81b8b2_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="2328.0" y="612.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_db2ad6" id="ServiceTask_db2ad6_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="2496.0" y="510.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_adbbd3" id="ServiceTask_adbbd3_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="2700.0" y="360.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_c5bf9b" id="ServiceTask_c5bf9b_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="3071.0" y="456.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ServiceTask_383c16" id="ServiceTask_383c16_di" isExpanded="true">
+        <dc:Bounds height="55.0" width="120.0" x="3264.0" y="372.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Gateway_1a47a1" id="Gateway_1a47a1_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="696.0" y="392.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Gateway_f6259c" id="Gateway_f6259c_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="1567.0" y="320.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="Gateway_c05eca" id="Gateway_c05eca_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="2160.0" y="548.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_075e20" id="ExclusiveGateway_075e20_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="960.0" y="392.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_09945c" id="ExclusiveGateway_09945c_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="1356.0" y="392.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_d34281" id="ExclusiveGateway_d34281_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="1704.0" y="392.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_a32fc2" id="ExclusiveGateway_a32fc2_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="1764.0" y="392.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_255882" id="ExclusiveGateway_255882_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="2052.0" y="548.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_fc57af" id="ExclusiveGateway_fc57af_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="3060.0" y="380.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape bpmnElement="ExclusiveGateway_059168" id="ExclusiveGateway_059168_di" isExpanded="true">
+        <dc:Bounds height="50.0" width="50.0" x="3190.0" y="385.0"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="Flow_6e4996" id="Flow_6e4996_di" sourceElement="Gateway_1a47a1_di" targetElement="UserTask_7c3617_di">
+        <di:waypoint x="746.0" y="417.0"/>
+        <di:waypoint x="768.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_20f0fb" id="Flow_20f0fb_di" sourceElement="Gateway_1a47a1_di" targetElement="ServiceTask_d53270_di">
+        <di:waypoint x="746.0" y="417.0"/>
+        <di:waypoint x="768.0" y="483.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_c3dc1f" id="Flow_c3dc1f_di" sourceElement="UserTask_7c3617_di" targetElement="ServiceTask_d53270_di">
+        <di:waypoint x="888.0" y="399.5"/>
+        <di:waypoint x="768.0" y="483.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_0d3b3f" id="Flow_0d3b3f_di" sourceElement="UserTask_7c3617_di" targetElement="ExclusiveGateway_075e20_di">
+        <di:waypoint x="888.0" y="399.5"/>
+        <di:waypoint x="960.0" y="417.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_59cede" id="Flow_59cede_di" sourceElement="ExclusiveGateway_075e20_di" targetElement="ServiceTask_63f496_di">
+        <di:waypoint x="1010.0" y="417.0"/>
+        <di:waypoint x="1032.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_93f28e" id="Flow_93f28e_di" sourceElement="ExclusiveGateway_075e20_di" targetElement="ServiceTask_7d1a9f_di">
+        <di:waypoint x="1010.0" y="417.0"/>
+        <di:waypoint x="989.0" y="607.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_c25ecf" id="Flow_c25ecf_di" sourceElement="ServiceTask_7d1a9f_di" targetElement="ServiceTask_8ac7de_di">
+        <di:waypoint x="1109.0" y="607.5"/>
+        <di:waypoint x="1140.0" y="607.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_89f640" id="Flow_89f640_di" sourceElement="ServiceTask_8ac7de_di" targetElement="TerminateEndEvent_702759_di">
+        <di:waypoint x="1260.0" y="607.5"/>
+        <di:waypoint x="1296.0" y="598.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_7c4a65" id="Flow_7c4a65_di" sourceElement="ServiceTask_63f496_di" targetElement="ServiceTask_b25430_di">
+        <di:waypoint x="1152.0" y="399.5"/>
+        <di:waypoint x="1200.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_65667a" id="Flow_65667a_di" sourceElement="ServiceTask_b25430_di" targetElement="ExclusiveGateway_09945c_di">
+        <di:waypoint x="1320.0" y="399.5"/>
+        <di:waypoint x="1356.0" y="417.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_603096" id="Flow_603096_di" sourceElement="ExclusiveGateway_09945c_di" targetElement="UserTask_03ced1_di">
+        <di:waypoint x="1406.0" y="417.0"/>
+        <di:waypoint x="1512.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_e34449" id="Flow_e34449_di" sourceElement="UserTask_03ced1_di" targetElement="ExclusiveGateway_d34281_di">
+        <di:waypoint x="1632.0" y="399.5"/>
+        <di:waypoint x="1704.0" y="417.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_573c06" id="Flow_573c06_di" sourceElement="ExclusiveGateway_d34281_di" targetElement="ServiceTask_7d1a9f_di">
+        <di:waypoint x="1754.0" y="417.0"/>
+        <di:waypoint x="989.0" y="607.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_4a1f9f" id="Flow_4a1f9f_di" sourceElement="ExclusiveGateway_d34281_di" targetElement="ExclusiveGateway_a32fc2_di">
+        <di:waypoint x="1754.0" y="417.0"/>
+        <di:waypoint x="1764.0" y="417.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_fa3453" id="Flow_fa3453_di" sourceElement="ExclusiveGateway_09945c_di" targetElement="Gateway_f6259c_di">
+        <di:waypoint x="1406.0" y="417.0"/>
+        <di:waypoint x="1567.0" y="345.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_b6f12d" id="Flow_b6f12d_di" sourceElement="Gateway_f6259c_di" targetElement="ExclusiveGateway_a32fc2_di">
+        <di:waypoint x="1617.0" y="345.0"/>
+        <di:waypoint x="1764.0" y="417.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_7fd8f2" id="Flow_7fd8f2_di" sourceElement="ExclusiveGateway_a32fc2_di" targetElement="UserTask_869378_di">
+        <di:waypoint x="1814.0" y="417.0"/>
+        <di:waypoint x="1812.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_2c7b4f" id="Flow_2c7b4f_di" sourceElement="UserTask_869378_di" targetElement="ServiceTask_ace9a1_di">
+        <di:waypoint x="1932.0" y="399.5"/>
+        <di:waypoint x="1812.0" y="315.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_9c256e" id="Flow_9c256e_di" sourceElement="UserTask_869378_di" targetElement="ServiceTask_1ae934_di">
+        <di:waypoint x="1932.0" y="399.5"/>
+        <di:waypoint x="1968.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_4637f8" id="Flow_4637f8_di" sourceElement="ServiceTask_1ae934_di" targetElement="TimerEvent_f39094_di">
+        <di:waypoint x="2088.0" y="399.5"/>
+        <di:waypoint x="2124.0" y="390.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_faa02d" id="Flow_faa02d_di" sourceElement="StartEvent_22bc4a_di" targetElement="ExclusiveGateway_255882_di">
+        <di:waypoint x="1896.0" y="546.0"/>
+        <di:waypoint x="2052.0" y="573.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_3dc2e3" id="Flow_3dc2e3_di" sourceElement="ExclusiveGateway_255882_di" targetElement="EndEvent_92c0ec_di">
+        <di:waypoint x="2102.0" y="573.0"/>
+        <di:waypoint x="2000.0" y="606.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_2ee679" id="Flow_2ee679_di" sourceElement="ExclusiveGateway_255882_di" targetElement="Gateway_c05eca_di">
+        <di:waypoint x="2102.0" y="573.0"/>
+        <di:waypoint x="2160.0" y="573.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_234b30" id="Flow_234b30_di" sourceElement="Gateway_c05eca_di" targetElement="TimerEvent_eebaac_di">
+        <di:waypoint x="2210.0" y="573.0"/>
+        <di:waypoint x="2160.0" y="630.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_59afa1" id="Flow_59afa1_di" sourceElement="TimerEvent_eebaac_di" targetElement="ServiceTask_81b8b2_di">
+        <di:waypoint x="2196.0" y="630.0"/>
+        <di:waypoint x="2328.0" y="639.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_44d387" id="Flow_44d387_di" sourceElement="Gateway_c05eca_di" targetElement="UserTask_d8809d_di">
+        <di:waypoint x="2210.0" y="573.0"/>
+        <di:waypoint x="2232.0" y="538.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_679042" id="Flow_679042_di" sourceElement="UserTask_d8809d_di" targetElement="ServiceTask_db2ad6_di">
+        <di:waypoint x="2448.0" y="538.0"/>
+        <di:waypoint x="2496.0" y="537.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_3873b2" id="Flow_3873b2_di" sourceElement="ServiceTask_db2ad6_di" targetElement="EndEvent_5d7a53_di">
+        <di:waypoint x="2616.0" y="537.5"/>
+        <di:waypoint x="2652.0" y="528.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_2e5634" id="Flow_2e5634_di" sourceElement="ServiceTask_adbbd3_di" targetElement="UserTask_808e31_di">
+        <di:waypoint x="2820.0" y="387.5"/>
+        <di:waypoint x="2868.0" y="387.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_7cc04a" id="Flow_7cc04a_di" sourceElement="UserTask_808e31_di" targetElement="ExclusiveGateway_fc57af_di">
+        <di:waypoint x="2988.0" y="387.5"/>
+        <di:waypoint x="3060.0" y="405.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_45ae51" id="Flow_45ae51_di" sourceElement="ExclusiveGateway_fc57af_di" targetElement="ExclusiveGateway_059168_di">
+        <di:waypoint x="3110.0" y="405.0"/>
+        <di:waypoint x="3190.0" y="410.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_8a3845" id="Flow_8a3845_di" sourceElement="ExclusiveGateway_fc57af_di" targetElement="ServiceTask_c5bf9b_di">
+        <di:waypoint x="3110.0" y="405.0"/>
+        <di:waypoint x="3071.0" y="483.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_64e003" id="Flow_64e003_di" sourceElement="ServiceTask_c5bf9b_di" targetElement="ExclusiveGateway_059168_di">
+        <di:waypoint x="3191.0" y="483.5"/>
+        <di:waypoint x="3190.0" y="410.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_0a9204" id="Flow_0a9204_di" sourceElement="ExclusiveGateway_059168_di" targetElement="ServiceTask_383c16_di">
+        <di:waypoint x="3240.0" y="410.0"/>
+        <di:waypoint x="3264.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_fa6d1e" id="Flow_fa6d1e_di" sourceElement="ServiceTask_383c16_di" targetElement="TerminateEndEvent_a2156b_di">
+        <di:waypoint x="3384.0" y="399.5"/>
+        <di:waypoint x="3432.0" y="390.0"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_fa4f0a" id="Flow_fa4f0a_di" sourceElement="StartEvent_2cd91b_di" targetElement="ServiceTask_692140_di">
+        <di:waypoint x="132.0" y="390.0"/>
+        <di:waypoint x="264.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_5325e4" id="Flow_5325e4_di" sourceElement="ServiceTask_692140_di" targetElement="ServiceTask_9fb2c6_di">
+        <di:waypoint x="384.0" y="399.5"/>
+        <di:waypoint x="540.0" y="399.5"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="Flow_f07a69" id="Flow_f07a69_di" sourceElement="ServiceTask_9fb2c6_di" targetElement="Gateway_1a47a1_di">
+        <di:waypoint x="660.0" y="399.5"/>
+        <di:waypoint x="696.0" y="417.0"/>
+      </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
 </definitions>

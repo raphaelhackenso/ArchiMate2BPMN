@@ -15,6 +15,7 @@ import org.camunda.bpm.model.bpmn.BpmnModelInstance;
 import org.camunda.bpm.model.bpmn.impl.instance.DataInputRefs;
 import org.camunda.bpm.model.bpmn.impl.instance.DataOutputRefs;
 import org.camunda.bpm.model.bpmn.instance.Activity;
+import org.camunda.bpm.model.bpmn.instance.BaseElement;
 import org.camunda.bpm.model.bpmn.instance.BoundaryEvent;
 import org.camunda.bpm.model.bpmn.instance.CallActivity;
 import org.camunda.bpm.model.bpmn.instance.Collaboration;
@@ -223,8 +224,10 @@ public class Main {
         List<String> businessfunctions = ArchiMateXMLLoader.returnAllElementsOfGivenType(archiMateModel, "BusinessFunction");
         List<Pair<SubProcess, Element>> subprocesses = new ArrayList<>();
         for(String businessfunction : businessfunctions) {
-            BPMNElementCreator.archiMate2BPMNnameAndID(archiMateModel, bpmnmodel, processes, lanePairs, subprocesses, mappings, Collections.singletonList(businessfunction), "SubProcess", SubProcess.class);
-            SubProcess tmpSubProcess = bpmnmodel.getModelElementById(("SubProcess_" + ArchiMateXMLLoader.removePrefix(businessfunction)).toUpperCase());
+            BPMNElementCreator.archiMate2BPMNnameAndID(archiMateModel, bpmnmodel, processes, lanePairs, subprocesses, mappings, Collections.singletonList(businessfunction), "Subprocess", SubProcess.class);
+            SubProcess tmpSubProcess = bpmnmodel.getModelElementById(("Subprocess_" + ArchiMateXMLLoader.removePrefix(businessfunction)));
+            String tmpSubProcessID = tmpSubProcess.getId();
+            tmpSubProcess.setId(tmpSubProcessID.toUpperCase());
             subprocesses.add(new Pair<SubProcess,Element>(tmpSubProcess, ArchiMateXMLLoader.findElementById(archiMateModel, businessfunction)));
             List<Pair<String,String>> allProperties = ArchiMateXMLLoader.getElementProperties(archiMateModel, ArchiMateXMLLoader.findElementById(archiMateModel, businessfunction));
             // The StandardLoopCharacteristics is not included in this prototype
@@ -1106,12 +1109,19 @@ public class Main {
                             tmpDocumentationFlow.setId("Documentation_" + ArchiMateXMLLoader.removePrefix(triggeringRelationship.getAttribute("identifier")));
                             tmpDocumentationFlow.setTextContent(ArchiMateXMLLoader.getDocumentationFromElement(triggeringRelationship));
                             sequenceFlow.getDocumentations().add(tmpDocumentationFlow);
-                        }                   
+                        }
+                    
+                    BaseElement parent = (BaseElement) sequenceFlow.getSource().getParentElement();
+                    if (parent instanceof Process) {
+                        ((Process) parent).addChildElement(sequenceFlow);
+                    } else if (parent instanceof SubProcess) {
+                        ((SubProcess) parent).addChildElement(sequenceFlow);
+                    } else {
+                        throw new IllegalStateException("Unsupported parent element type: " + parent.getElementType().getTypeName());
+                    }
 
-                    Process tmpProcess = (Process) sequenceFlow.getSource().getParentElement();
-                        tmpProcess.addChildElement(sequenceFlow);
-                        from.getOutgoing().add(sequenceFlow);
-                        to.getIncoming().add(sequenceFlow);
+                    from.getOutgoing().add(sequenceFlow);
+                    to.getIncoming().add(sequenceFlow);
 
                     for(Pair<String,String> propertyForRelationship : properiesForRelationship) {
                         if(propertyForRelationship.getValue0().toLowerCase().equals("default") && propertyForRelationship.getValue1().toLowerCase().equals("true")){
