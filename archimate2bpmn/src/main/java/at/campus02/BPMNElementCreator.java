@@ -31,8 +31,6 @@ import org.javatuples.Pair;
 
 import java.util.Map;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane.SystemMenuBar;
-
 import org.w3c.dom.*;
 
 public class BPMNElementCreator {
@@ -408,6 +406,10 @@ public class BPMNElementCreator {
                         subFormRefID.setCamundaId("subformRefId");
                         subFormRefID.setCamundaValue(defaultValueOrContent);
                         tmpCamundaProperties.getCamundaProperties().add(subFormRefID);
+                    CamundaProperty subFormMultiple = bpmnmodel.newInstance(CamundaProperty.class);
+                        subFormMultiple.setCamundaId("multiple");
+                        subFormMultiple.setCamundaValue("true");
+                        tmpCamundaProperties.getCamundaProperties().add(subFormMultiple);
                     break;
                 case "boolean":
                     tmpCamundaFormField.setCamundaId(nameOnly);
